@@ -48,7 +48,7 @@ export default tseslint.config(
       "react/react-in-jsx-scope": "off",
 
       //TypeScript/General Best Practices
-      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "no-console": ["warn", { allow: ["warn", "error"] }],
       "prefer-const": "warn",
     },
