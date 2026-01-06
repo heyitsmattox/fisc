@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    // ... (other options like target, module, etc.)
+    "jsx": "react-jsx", // Ensure this is set for React/TSX files
+    "esModuleInterop": true,
+  },
+  "include": [
+    "src/**/*",         // This includes all files and folders in src/
+    "src/**/*.ts",      // Explicitly includes TypeScript files
+    "src/**/*.tsx"      // Explicitly includes TypeScript React files (JSX)
+, "tsconfig.eslint.json"  ],
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+}
