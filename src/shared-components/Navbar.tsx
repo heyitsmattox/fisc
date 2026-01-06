@@ -6,7 +6,7 @@ interface NavbarProps {
 
 const Navbar = ({ title = "Fisc", description = "Default description" }: NavbarProps) => {
   return (
-    <div className="border-2 border-solid border-red-500 rounded-lg p-20">
+    <div className=" rounded-lg p-4">
       {/* Top Row: Title and Icon */}
       <div className="flex items-center justify-between">
         {/* Invisible spacer to keep the title perfectly centered */}

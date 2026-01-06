@@ -1,22 +1,12 @@
+import type { Config } from 'tailwindcss'
 
-
-import type { Config } from 'tailwindcss';
-
-const config: Config = {
-  // CRITICAL: This array tells Tailwind where to scan for class names
-  // so it can generate the optimized CSS output.
+export default {
   content: [
-    './index.html',
-    './src/**/*.{js,ts,jsx,tsx}',
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
-      // You can define custom colors, fonts, spacing, etc., here.
-    },
+    extend: {},
   },
-  plugins: [
-    // Add any official Tailwind plugins here (e.g., @tailwindcss/forms)
-  ],
-};
-
-export default config;
+  plugins: [],
+} satisfies Config
