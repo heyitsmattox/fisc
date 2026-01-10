@@ -21,6 +21,7 @@ const Navbar = ({
           </div> 
         <div className="w-8 flex justify-end pr-2">
           {showIcon && (
+
             <i className={`${menuIcon} text-slate-400 text-2xl cursor-pointer`}></i>
           )}
         </div>
