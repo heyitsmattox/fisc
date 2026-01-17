@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router";
 
 interface NavbarProps {
   img?: string;
@@ -54,16 +55,16 @@ const Navbar = ({
                 </div>
                 <ul className="flex flex-col gap-6 p-8 text-lg font-medium text-slate-700">
                   <li className="hover:text-blue-500 transition-colors">
-                    <a href="/">Dashboard</a>
+                    <Link to="/dashboard">Dashboard</Link>
                   </li>
                   <li className="hover:text-blue-500 transition-colors">
-                    <a href="/inventory">Inventory</a>
+                    <Link to="/inventory">Inventory</Link>
                   </li>
                   <li className="hover:text-blue-500 transition-colors">
-                    <a href="/portfolio">Portfolio</a>
+                    <Link to="/portfolio">Portfolio</Link>
                   </li>
                   <li className="hover:text-blue-500 transition-colors">
-                    <a href="/settings">Settings</a>
+                    <Link to="/settings">Settings</Link>
                   </li>
                 </ul>
               </div>
