@@ -1,21 +1,19 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from "../src/App";
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom'; 
+import App from "./App"; 
+import "./index.css";
 
-import "../src/index.css";
-
-// 2. Find the root element in index.html
 const rootElement = document.getElementById('root');
 
 if (rootElement) {
-  // 3. Create a React root and render the App component
   ReactDOM.createRoot(rootElement).render(
-    // StrictMode helps identify potential problems in an application.
     <React.StrictMode>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </React.StrictMode>
   );
 } else {
-    // Optional: Log an error if the root element isn't found
     console.error('Root element with ID "root" not found in the DOM.');
 }
