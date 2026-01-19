@@ -1,8 +1,15 @@
+import Navbar from "./Navbar";
+
 const Dashboard = () => {
+
+
+
+
   return (
-    <div>
-      <h1>Dashboard component</h1>
-    </div>
+    <>
+    <Navbar showNavbarMenuIcon={true} showFiscImageLogo={false} />
+    <h1>Dashboard component placeholder</h1>
+    </>
   );
 };
 

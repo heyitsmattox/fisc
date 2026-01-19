@@ -2,15 +2,18 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 
 interface NavbarProps {
-  img?: string;
-  menuIcon?: string;
-  showIcon: boolean;
+  fiscImageLogo?: string;
+  showFiscImageLogo: boolean
+  navbarMenuIcon?: string;
+  showNavbarMenuIcon: boolean;
 }
 
 const Navbar = ({
-  img = "src/assets/fiscLogo.png",
-  menuIcon = "fa-solid fa-bars text-slate-400 text-2xl cursor-pointer",
-  showIcon = true,
+  fiscImageLogo = "src/assets/fiscLogo.png",
+  showFiscImageLogo = true,
+  navbarMenuIcon = "fa-solid fa-bars text-slate-400 text-2xl cursor-pointer",
+  showNavbarMenuIcon = true
+
 }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
@@ -24,13 +27,17 @@ const Navbar = ({
       <div className="flex items-center justify-between">
         <div className="w-10"></div>
         <div className="flex items-center">
-          <img src={img} className="w-32" />
-        </div>
+          {
+            showFiscImageLogo && (
+              <img src={fiscImageLogo} className="w-32" />
+            )
+          }
+          </div>
         <div className="w-8 flex justify-end pr-2">
-          {showIcon && (
+          {showNavbarMenuIcon && (
             <button onClick={handleMenuOpen}>
               <i
-                className={`${menuIcon} text-slate-500 hover:text-slate-700 text-2xl cursor-pointer`}
+                className={`${navbarMenuIcon} text-slate-500 hover:text-slate-700 text-2xl cursor-pointer`}
               ></i>
             </button>
           )}
