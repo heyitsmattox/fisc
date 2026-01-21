@@ -1,12 +1,28 @@
-import InventoryForm from "./InventoryForm";
 import Navbar from "./Navbar";
+import SearchBar from "./SearchBar";
+import InventoryForm from "./InventoryForm";
 const Inventory = () => {
   return (
-    <div>
-      <h1 className="text-2xl text-center p-2">Inventory component</h1>
-       <Navbar showNavbarMenuIcon={true} showFiscImageLogo={false} />
+    <>
+      <div>
+        <Navbar showNavbarMenuIcon={true} showFiscImageLogo={false} />
+      </div>
+      {/* Div element that will control UI placement on the Inventory page */}
+      <div className=" m-4">
+        <SearchBar
+          searchBarPlaceholderTxt={"Search"}
+          buttonText={"New Entry"}
+          onSearchChange={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+          onButtonClick={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+          widthOfSearchBar={"72"}
+        />
+      </div>
       <InventoryForm />
-    </div>
+    </>
   );
 };
 
