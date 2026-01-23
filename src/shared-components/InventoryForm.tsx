@@ -57,7 +57,7 @@ const InventoryForm = () => {
             />
           </div>
 
-          <div>
+          <div className="flex flex-col">
             <label htmlFor="email">Email:</label>
             <input
               type="email"
@@ -69,7 +69,7 @@ const InventoryForm = () => {
             />
           </div>
 
-          <div>
+          <div className="flex flex-col">
             <label htmlFor="message">Message:</label>
             <textarea
               id="message"

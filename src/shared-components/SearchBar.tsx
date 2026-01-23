@@ -1,4 +1,4 @@
-import React, { type ChangeEvent, type FormEvent, useState } from "react";
+import { type ChangeEvent, type FormEvent, type JSX, useState } from "react";
 
 interface SearchBarProps {
   searchBarPlaceholderTxt: string;
@@ -9,12 +9,12 @@ interface SearchBarProps {
   widthOfSearchBar: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({
-  searchBarPlaceholderTxt = "Search",
-  buttonText = "New Entry",
+export function SearchBar({ 
+  searchBarPlaceholderTxt = "Search", 
+  buttonText = "New Entry", 
   onButtonClick,
-  widthOfSearchBar = "w-72",
-}) => {
+  widthOfSearchBar = "w-72" 
+}: SearchBarProps): JSX.Element  {
   const [text, setText] = useState<string>("");
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
