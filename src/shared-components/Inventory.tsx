@@ -18,7 +18,7 @@ const Inventory = () => {
           onButtonClick={function (): void {
             throw new Error("Function not implemented.");
           }}
-          widthOfSearchBar={"72"}
+          widthOfSearchBar={"72"} 
         />
       </div>
       <InventoryForm />
