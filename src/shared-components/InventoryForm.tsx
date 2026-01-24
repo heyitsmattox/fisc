@@ -1,75 +1,75 @@
-import { useState } from "react";
+import { useState, type ChangeEvent, type JSX } from "react";
 
 interface InvFormProps {
-  dateOfLastSale: string;
-  ProductName: string;
-  CostPerItem: number;
-  ProductQty: number;
-  TotalCost: number;
-  SoldListPrice: number;
-  ShippingFees: number;
-  TotalPriceSold: number;
-  Profit: number;
+  dateOfLastSale?: string;
+  productName: string; //ProductName
+  costPerItem: number;
+  productQty: number;
+  totalCost: number;
+  soldListPrice: number;
+  shippingFees: number;
+  totalPriceSold: number;
+  profit: number;
 }
 
-const InventoryForm = () => {
+export function InventoryForm({
+  dateOfLastSale = "Date of Last Sale",
+  productName = "Product Name",
+  costPerItem = 0,
+  productQty = 0,
+  totalCost = 0,
+  soldListPrice = 0,
+  shippingFees = 0,
+  totalPriceSold = 0,
+  profit = 0,
+}: InvFormProps): JSX.Element {
   const [formData, setFormData] = useState<InvFormProps>({
     dateOfLastSale: "",
-    ProductName: "",
-    CostPerItem: 0,
-    ProductQty: 0,
-    TotalCost: 0,
-    SoldListPrice: 0,
-    ShippingFees: 0,
-    TotalPriceSold: 0,
-    Profit: 0,
+    productName: "",
+    costPerItem: 0,
+    productQty: 0,
+    totalCost: 0,
+    soldListPrice: 0,
+    shippingFees: 0,
+    totalPriceSold: 0,
+    profit: 0,
   });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.name as keyof InvFormProps;
-    const { value, type } = e.target;
-
-    // Checking if input is a number string and then converting it to a decimal Number. i.e "25.50" into 25.50
-    // || fallback incase user deletes everything in the input box.
-    const parsedValue = type === "number" ? parseFloat(value) || 0 : value;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: parsedValue,
-    }));
-  };
 
   return (
     <>
-    {/* Parent tag of the form */}
+      {/* Parent tag of the form */}
       <form className="flex flex-row border-2 border-blue-400">
         {/* Add the onSubmit property on the form tag. */}
         {/* div containing all the fields */}
-          <div className="flex flex-col">
-            <label htmlFor="dateOfLastSale">Date of Last Sale:</label>
-            <input
-              type="date"
-              id="dateOfLastSale"
-              name="dateOfLastSale" // Matches the key in state
-              value={formData.dateOfLastSale} // Binds the input to React state
-              onChange={handleChange}
-              required
-            />
-          </div>
+        <div className="flex flex-col">
+          <label htmlFor="dateOfLastSale">{dateOfLastSale}</label>
+          <input
+            type="date"
+            id="dateOfLastSale"
+            //value={console.log("data")} // Binds the input to React state
+            //onChange={handleChange}
+            required
+          />
+        </div>
 
-          <div className="flex flex-col">
-            <label htmlFor="email">Email:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              //value={formData.email}
-              //onChange={handleChange}
-              required
-            />
-          </div>
+        <div className="flex flex-col">
+          <label htmlFor="productName">{productName}</label>
+          <input
+            type="text"
+            id="productName"
+            className="text-slate-950"
+            value={formData.productName}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              const { value } = e.target;
+              setFormData((prev) => ({
+                ...prev,
+                productName: value, // Directly update the key
+              }));
+            }}
+          />
+        </div>
 
-          <div className="flex flex-col">
+        {/* <div className="flex flex-col">
             <label htmlFor="message">Message:</label>
             <textarea
               id="message"
@@ -77,12 +77,40 @@ const InventoryForm = () => {
               //value={formData.message}
               //onChange={handleChange}
             />
-          </div>
+          </div> */}
 
-          <button type="submit">Submit</button>
+        <button type="submit">Submit</button>
       </form>
     </>
   );
-};
+}
 
 export default InventoryForm;
+
+// const InventoryForm = () => {
+//   const [formData, setFormData] = useState<InvFormProps>({
+//     dateOfLastSale: "",
+//     productName: "",
+//     costPerItem: 0,
+//     productQty: 0,
+//     totalCost: 0,
+//     soldListPrice: 0,
+//     shippingFees: 0,
+//     totalPriceSold: 0,
+//     profit: 0,
+//   });
+
+// const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//   e.preventDefault();
+//   const name = e.target.name as keyof InvFormProps;
+//   const { value, type } = e.target;
+
+//   // Checking if input is a number string and then converting it to a decimal Number. i.e "25.50" into 25.50
+//   // || fallback incase user deletes everything in the input box.
+//   const parsedValue = type === "number" ? parseFloat(value) || 0 : value;
+
+//   setFormData((prev) => ({
+//     ...prev,
+//     [name]: parsedValue,
+//   }));
+// };
