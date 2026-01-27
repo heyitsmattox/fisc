@@ -46,6 +46,7 @@ export function InventoryForm({
           <input
             type="date"
             id="dateOfLastSale"
+            className="text-slate-950"
             //value={console.log("data")} // Binds the input to React state
             //onChange={handleChange}
             required
