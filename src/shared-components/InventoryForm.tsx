@@ -52,7 +52,7 @@ return (
           type={field.type}
           value={formData[field.formName] ?? ""}
           onChange={(e) => handleChange(field.formName, e.target.value)}
-          className="border p-2"
+          className="border p-2 text-slate-950"
         />
       </div>
     ))}
