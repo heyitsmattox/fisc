@@ -25,17 +25,26 @@ export const inventoryFields: FieldConfig[] = [
 ];
 
 export function InventoryForm({
+  //config is our "smart" default in case we reuse this component. By leaving the config prop undefined or not passed, it'll plug in our data from FieldConfig above. If we need different fields we can pass config={otherFieldName}
   config = inventoryFields,
   onSubmit,
+  //Telling typescript to only accept an object that has exactly what is defined in the DynamicInventoryFormProps interface.
 }: DynamicInventoryFormProps): JSX.Element {
-  // Initialize state using the names from our config
   const [formData, setFormData] = useState(() => {
     //using a callback function inside useState to pre-fill our data.
+
+  // Initialize state using the names from our config
     const initialState: Record<string, string | number> = {};
-    //looping through our inventoryFields and creates an object that should 
-    //populate data like so --> { dateOfPurchase: "", productName: "", costPerItem: 0, ... } 
+
+//Record is used here b/c we don't know the key value pairs. 
+//Using record allows us to define the "shape" w/o knowing the names.
+//  A "Record" is a single entry that groups related data points.
+// In TypeScript, Record<K, V> says: "I want a record where every Key (K) is a certain type and every Value (V) is a certain type."
+ 
     config.forEach((f) => initialState[f.formName] = f.defaultValue ?? "");
     return initialState;
+       //looping through our inventoryFields and creates an object that should 
+    //populate data like so --> { dateOfPurchase: "", productName: "", costPerItem: 0, ... } 
   });
 //handle all the change logic for every input field
   const handleChange = (name: string, value: string | number) => {
