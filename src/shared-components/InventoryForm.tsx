@@ -114,18 +114,15 @@ export function InventoryForm({
             onChange={(e) => {
               let val = e.target.value;
               if (field.type === "number") {
-                // Remove the $ and any non-numeric characters before saving to state
                 val = val.replace(/[^0-9.]/g, "");
               }
               handleChange(field.formName, val);
             }}
             placeholder={field.placeholder}
-            className="bg-transparent text-zinc-50 p-1 text-sm outline-none transition-all focus:bg-white/5 rounded"
+            className="bg-transparent text-zinc-50 p-1 text-sm outline-none transition-all focus:bg-white/5 rounded [&::-webkit-calendar-picker-indicator]:invert "
           />
         </div>
       ))}
-
-      {/* Modernized Button: Spanning full width or styled as a sleek floating action */}
       <button
         type="submit"
         className="col-span-9 mt-4 bg-sky-600 hover:bg-blue-500 text-white font-medium py-2 rounded-lg transition-colors shadow-lg"
