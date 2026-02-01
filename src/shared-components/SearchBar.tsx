@@ -9,12 +9,12 @@ interface SearchBarProps {
   widthOfSearchBar: string;
 }
 
-export function SearchBar({ 
+const SearchBar = ({ 
   searchBarPlaceholderTxt = "Search", 
   buttonText = "New Entry", 
   onButtonClick,
   widthOfSearchBar = "w-72" 
-}: SearchBarProps): JSX.Element  {
+}: SearchBarProps): JSX.Element => {
   const [text, setText] = useState<string>("");
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -40,7 +40,7 @@ export function SearchBar({
           placeholder={searchBarPlaceholderTxt}
         />
       </div>
-      
+
       <button
         type="button"
         onClick={onButtonClick}
