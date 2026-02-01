@@ -107,7 +107,7 @@ export function InventoryForm({
           <input
             type={field.type === "number" ? "text" : field.type}
             value={
-              field.type === "number"
+              field.type === "number" && field.formName !== "productQty"
                 ? `$${formData[field.formName] ?? 0}`
                 : formData[field.formName ?? ""]
             }
