@@ -1,7 +1,12 @@
 import Navbar from "./Navbar";
 import SearchBar from "./SearchBar";
-import InventoryForm from "./InventoryForm";
+import { InventoryForm, inventoryFields } from "./InventoryForm";
 const Inventory = () => {
+
+  const handleSave = (data: Record<string, unknown>) => {
+    console.log("Saved Data:", data);
+    // Eventually, you'll put your database save logic here
+  };
   return (
     <>
       <div>
@@ -18,10 +23,13 @@ const Inventory = () => {
           onButtonClick={function (): void {
             throw new Error("Function not implemented.");
           }}
-          widthOfSearchBar={"72"}
+          widthOfSearchBar={"72"} 
         />
       </div>
-      <InventoryForm />
+      <InventoryForm 
+        config={inventoryFields} 
+        onSubmit={handleSave} 
+      />
     </>
   );
 };

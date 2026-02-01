@@ -1,89 +1,72 @@
-import { useState } from "react";
+import { useState, type JSX } from "react";
 
-interface InvFormProps {
-  dateOfLastSale: string;
-  ProductName: string;
-  CostPerItem: number;
-  ProductQty: number;
-  TotalCost: number;
-  SoldListPrice: number;
-  ShippingFees: number;
-  TotalPriceSold: number;
-  Profit: number;
+interface FieldConfig {
+  formName: string; // The key in our data (e.g., "costPerItem")
+  formLabel: string; // The text the user sees (e.g., "Cost Per Item")
+  type: "text" | "number" | "date";
+  defaultValue?: string | number;
 }
 
-const InventoryForm = () => {
- const [formData, setFormData] = useState<InvFormProps>({
-  dateOfLastSale: "",
-  ProductName: "",
-  CostPerItem: 0,
-  ProductQty: 0,
-  TotalCost: 0,
-  SoldListPrice: 0,
-  ShippingFees: 0,
-  TotalPriceSold: 0,
-  Profit: 0,
-});
+interface DynamicInventoryFormProps {
+  config: FieldConfig[];
+  onSubmit: (data: Record<string, unknown>) => void;
+}
+//blueprint where every every line in our array represents our a single input
+export const inventoryFields: FieldConfig[] = [
+  { formName: "dateOfPurchase", formLabel: "Purchase Date",   type: "date",   defaultValue: "" },
+  { formName: "productName",    formLabel: "Product Name",    type: "text",   defaultValue: "" },
+  { formName: "costPerItem",    formLabel: "Cost Per Item",   type: "number", defaultValue: 0  },
+  { formName: "productQty",     formLabel: "Product Qty",     type: "number", defaultValue: 0  },
+  { formName: "totalCost",      formLabel: "Total Cost",      type: "number", defaultValue: 0  },
+  { formName: "soldListPrice",  formLabel: "Sold List Price", type: "number", defaultValue: 0  },
+  { formName: "totalPriceSold", formLabel: "Total Price Sold",type: "number", defaultValue: 0  },
+  { formName: "shippingCost",   formLabel: "Shipping Cost",   type: "number", defaultValue: 0  },
+  { formName: "profit",         formLabel: "Profit",          type: "number", defaultValue: 0  },
+];
 
-const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const name = e.target.name as keyof InvFormProps;
-  const { value, type } = e.target;
+export function InventoryForm({
+  //config is our "smart" default in case we reuse this component. By leaving the config prop undefined or not passed, it'll plug in our data from FieldConfig above. If we need different fields we can pass config={otherFieldName}
+  config = inventoryFields,
+  onSubmit,
+  //Telling typescript to only accept an object that has exactly what is defined in the DynamicInventoryFormProps interface.
+}: DynamicInventoryFormProps): JSX.Element {
+  const [formData, setFormData] = useState(() => {
+    //using a callback function inside useState to pre-fill our data.
 
-  // Checking if input is a number string and then converting it to a decimal Number. i.e "25.50" into 25.50
-  // || fallback incase user deletes everything in the input box.
-  const parsedValue = type === "number" ? parseFloat(value) || 0 : value;
+  // Initialize state using the names from our config
+    const initialState: Record<string, string | number> = {};
 
-  setFormData((prev) => ({
-   ...prev,
-    [name]: parsedValue,
-  }));
-};
-
-
-
-  return (
-    <>
-    <form>
-      {/* Add the onSubmit property on the form tag. */}
-      <div>
-        <label htmlFor="dateOfLastSale">Date of Last Sale:</label>
-        <input 
-          type="date" 
-          id="dateOfLastSale" 
-          name="dateOfLastSale" // Matches the key in state
-          value={formData.dateOfLastSale} // Binds the input to React state
-          onChange={handleChange} 
-          required 
+//Record is used here b/c we don't know the key value pairs. 
+//Using record allows us to define the "shape" w/o knowing the names.
+//  A "Record" is a single entry that groups related data points.
+// In TypeScript, Record<K, V> says: "I want a record where every Key (K) is a certain type and every Value (V) is a certain type."
+ 
+    config.forEach((f) => initialState[f.formName] = f.defaultValue ?? "");
+    return initialState;
+       //looping through our inventoryFields and creates an object that should 
+    //populate data like so --> { dateOfPurchase: "", productName: "", costPerItem: 0, ... } 
+  });
+//handle all the change logic for every input field
+  const handleChange = (name: string, value: string | number) => {
+    //Taking all the current form data and keeping it exactly as it is.
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    //Find the specific key that matches the name of the input I just typed in, and update only that one value.
+  };
+return (
+  <form className="grid grid-cols-2 gap-4">
+    {config.map((field) => (
+      <div key={field.formName} className="flex flex-col">
+        <label>{field.formLabel}</label>
+        <input
+          type={field.type}
+          value={formData[field.formName] ?? ""}
+          onChange={(e) => handleChange(field.formName, e.target.value)}
+          className="border p-2 text-slate-950"
         />
       </div>
-
-      <div>
-        <label htmlFor="email">Email:</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email"
-          //value={formData.email}
-          //onChange={handleChange}
-          required 
-        />
-      </div>
-
-      <div>
-        <label htmlFor="message">Message:</label>
-        <textarea 
-          id="message" 
-          name="message"
-          //value={formData.message}
-          //onChange={handleChange}
-        />
-      </div>
-
-      <button type="submit">Submit</button>
-    </form>
-    </>
-  )
-
-};
-
+    ))}
+    <button type="submit">Submit</button>
+  </form>
+);
+}
 export default InventoryForm;
