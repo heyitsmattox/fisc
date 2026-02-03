@@ -88,6 +88,15 @@ export function InventoryForm({
     //looping through our inventoryFields and creates an object that should
     //populate data like so --> { dateOfPurchase: "", productName: "", costPerItem: 0, ... }
   });
+  console.log('this is our form data --->', formData)
+
+const [addEntry, setAddEntry ] = useState<boolean>(false);
+
+const handleAddEntryBtn = (e: { preventDefault: () => void; }) => {
+  e.preventDefault()
+  setAddEntry(!addEntry)
+}
+
   //handle all the change logic for every input field
   const handleChange = (name: string, value: string | number) => {
     //Taking all the current form data and keeping it exactly as it is.
@@ -117,18 +126,34 @@ export function InventoryForm({
                 val = val.replace(/[^0-9.]/g, "");
               }
               handleChange(field.formName, val);
+          
             }}
             placeholder={field.placeholder}
             className="bg-transparent text-zinc-50 p-1 text-sm outline-none transition-all focus:bg-white/5 rounded [&::-webkit-calendar-picker-indicator]:invert "
           />
         </div>
       ))}
-      <button
+       <button
         type="submit"
+        onClick={handleAddEntryBtn}
         className="col-span-9 mt-4 bg-sky-600 hover:bg-blue-500 text-white font-medium py-2 rounded-lg transition-colors shadow-lg"
       >
         Add Entry
       </button>
+      {addEntry && (
+       <ul>
+        <li>{formData.dateOfPurchase}</li>
+        <li>{formData.productName}</li>
+        <li>{formData.costPerItem}</li>
+        <li>{formData.productQty}</li>
+        <li>{formData.totalCost}</li>
+        <li>{formData.soldListPrice}</li>
+        <li>{formData.totalPriceSold}</li>
+        <li>{formData.shippingCost}</li>
+        <li>{formData.profit}</li>
+       </ul>
+      )}
+     
     </form>
   );
 }
