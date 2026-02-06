@@ -26,10 +26,13 @@ const Inventory = () => {
           widthOfSearchBar={"72"} 
         />
       </div>
+   
+
       <InventoryForm 
         config={inventoryFields} 
         onSubmit={handleSave} 
       />
+  
     </>
   );
 };

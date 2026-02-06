@@ -12,6 +12,20 @@ interface DynamicInventoryFormProps {
   config: FieldConfig[];
   onSubmit: (data: Record<string, unknown>) => void;
 }
+
+interface InventoryEntry {
+  id: number;
+  dateOfPurchase: string;
+  productName: string;
+  costPerItem: number;
+  productQty: number;
+  totalCost: number;
+  soldListPrice: number;
+  totalPriceSold: number;
+  shippingCost: number;
+  profit: number;
+}
+
 //blueprint where every every line in our array represents our a single input
 export const inventoryFields: FieldConfig[] = [
   {
@@ -88,14 +102,25 @@ export function InventoryForm({
     //looping through our inventoryFields and creates an object that should
     //populate data like so --> { dateOfPurchase: "", productName: "", costPerItem: 0, ... }
   });
-  console.log('this is our form data --->', formData)
+  console.log("this is our form data --->", formData);
 
-const [addEntry, setAddEntry ] = useState<boolean>(false);
+  const [addInventory, setAddInventory] = useState<InventoryEntry[]>([]);
 
-const handleAddEntryBtn = (e: { preventDefault: () => void; }) => {
-  e.preventDefault()
-  setAddEntry(!addEntry)
-}
+  const handleAddEntryBtn = (e: React.FormEvent) => {
+    e.preventDefault(); // Stops the page from refreshing
+
+    // 1. Create a "Snapshot" of the current form data with a unique ID
+    const newEntry: InventoryEntry = {
+      ...formData, // Copies all the fields from your form
+      id: Date.now(), // Adds a unique fingerprint for React keys
+    } as InventoryEntry; // Tells TS this matches our interface
+
+    // 2. Add it to the list
+    setAddInventory((prev) => [...prev, newEntry]);
+
+    // 3. Clear the form (Optional but recommended)
+    setFormData(formData);
+  };
 
   //handle all the change logic for every input field
   const handleChange = (name: string, value: string | number) => {
@@ -103,58 +128,90 @@ const handleAddEntryBtn = (e: { preventDefault: () => void; }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
     //Find the specific key that matches the name of the input I just typed in, and update only that one value.
   };
-  return (
-    <form className="grid grid-cols-9 gap-0 bg-[#1E2329] p-4 rounded-xl shadow-2xl border border-slate-700/50">
-      {config.map((field) => (
-        <div
-          key={field.formName}
-          className="flex flex-col px-2 border-r border-slate-700 last:border-r-0"
-        >
-          <label className="text-[10px] uppercase font-bold text-slate-500 mb-1 pl-1">
-            {field.formLabel}
-          </label>
-          <input
-            type={field.type === "number" ? "text" : field.type}
-            value={
-              field.type === "number" && field.formName !== "productQty"
-                ? `$${formData[field.formName] ?? 0}`
-                : formData[field.formName ?? ""]
-            }
-            onChange={(e) => {
-              let val = e.target.value;
-              if (field.type === "number") {
-                val = val.replace(/[^0-9.]/g, "");
-              }
-              handleChange(field.formName, val);
-          
-            }}
-            placeholder={field.placeholder}
-            className="bg-transparent text-zinc-50 p-1 text-sm outline-none transition-all focus:bg-white/5 rounded [&::-webkit-calendar-picker-indicator]:invert "
-          />
-        </div>
-      ))}
-       <button
-        type="submit"
-        onClick={handleAddEntryBtn}
-        className="col-span-9 mt-4 bg-sky-600 hover:bg-blue-500 text-white font-medium py-2 rounded-lg transition-colors shadow-lg"
+return (
+    <div className="w-full min-h-screen bg-[#0F1216] p-8 text-zinc-50 flex flex-col gap-10">
+      
+      {/* SECTION 1: THE FORM */}
+      <form 
+        onSubmit={handleAddEntryBtn}
+        className="grid grid-cols-9 gap-0 bg-[#1E2329] p-4 rounded-xl shadow-2xl border border-slate-700/50"
       >
-        Add Entry
-      </button>
-      {addEntry && (
-       <ul>
-        <li>{formData.dateOfPurchase}</li>
-        <li>{formData.productName}</li>
-        <li>{formData.costPerItem}</li>
-        <li>{formData.productQty}</li>
-        <li>{formData.totalCost}</li>
-        <li>{formData.soldListPrice}</li>
-        <li>{formData.totalPriceSold}</li>
-        <li>{formData.shippingCost}</li>
-        <li>{formData.profit}</li>
-       </ul>
-      )}
-     
-    </form>
+        {inventoryFields.map((field) => (
+          <div
+            key={field.formName}
+            className="flex flex-col px-2 border-r border-slate-700 last:border-r-0"
+          >
+            <label className="text-[10px] uppercase font-bold text-slate-500 mb-1 pl-1">
+              {field.formLabel}
+            </label>
+            <input
+              type={field.type === "number" ? "text" : field.type}
+              value={
+                field.type === "number" && field.formName !== "productQty"
+                  ? `$${formData[field.formName] ?? 0}`
+                  : formData[field.formName] ?? ""
+              }
+              onChange={(e) => {
+                let val = e.target.value;
+                if (field.type === "number") {
+                  val = val.replace(/[^0-9.]/g, ""); // Clean the $ for the state
+                }
+                handleChange(field.formName, val);
+              }}
+              placeholder={field.placeholder}
+              className="bg-transparent text-zinc-50 p-1 text-sm outline-none transition-all focus:bg-white/5 rounded [&::-webkit-calendar-picker-indicator]:invert"
+            />
+          </div>
+        ))}
+        
+        <button
+          type="submit"
+          className="col-span-9 mt-4 bg-sky-600 hover:bg-sky-500 text-white font-medium py-2 rounded-lg transition-colors shadow-lg"
+        >
+          Add Entry
+        </button>
+      </form>
+
+      {/* SECTION 2: THE TABLE (Now outside the form for full width) */}
+      <div className="w-full overflow-hidden rounded-xl border border-slate-700/50 bg-[#1E2329] shadow-2xl">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[1000px] text-left border-collapse table-auto">
+            <thead>
+              <tr className="border-b border-slate-700 bg-slate-800/50">
+                {inventoryFields.map((field) => (
+                  <th key={field.formName} className="px-6 py-4 text-[10px] uppercase tracking-wider text-slate-500 font-bold">
+                    {field.formLabel}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-700/50">
+              {addInventory.map((item) => (
+                <tr key={item.id} className="hover:bg-white/5 transition-colors group">
+                  <td className="px-6 py-4 text-sm text-zinc-400 whitespace-nowrap">{item.dateOfPurchase}</td>
+                  <td className="px-6 py-4 text-sm font-medium text-zinc-50 whitespace-nowrap">{item.productName}</td>
+                  <td className="px-6 py-4 text-sm text-zinc-300">${item.costPerItem ?? 0}</td>
+                  <td className="px-6 py-4 text-sm text-zinc-300">{item.productQty ?? 0}</td>
+                  <td className="px-6 py-4 text-sm text-zinc-300">${item.totalCost ?? 0}</td>
+                  <td className="px-6 py-4 text-sm text-zinc-300">${item.soldListPrice ?? 0}</td>
+                  <td className="px-6 py-4 text-sm text-zinc-300">${item.totalPriceSold ?? 0}</td>
+                  <td className="px-6 py-4 text-sm text-zinc-300">${item.shippingCost ?? 0}</td>
+                  <td className={`px-6 py-4 text-sm font-bold ${Number(item.profit) >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
+                    ${item.profit ?? 0}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {addInventory.length === 0 && (
+          <div className="p-12 text-center text-slate-500 italic bg-slate-900/10">
+            No entries found. Fill out the form above to get started.
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 export default InventoryForm;
