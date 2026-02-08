@@ -109,7 +109,10 @@ export function InventoryForm({
   // array for holding our data which are objects for when the user clicks on add entry
   const [addInventory, setAddInventory] = useState<InventoryEntry[]>([]);
 
-  const handleAddEntryBtn = (e: React.FormEvent, initialState: Record<string, string | number> = {}) => {
+  const handleAddEntryBtn = (
+    e: React.FormEvent,
+    initialState: Record<string, string | number> = {},
+  ) => {
     e.preventDefault(); // Stops the page from refreshing
 
     // Create a "Snapshot" of the current form data with a unique ID
@@ -122,10 +125,10 @@ export function InventoryForm({
     setAddInventory((prev) => [...prev, newEntry]);
 
     // clear the form
-  const handleClear = () => {
-    setFormData(initialState)
-  }
-  handleClear()
+    const handleClear = () => {
+      setFormData(initialState);
+    };
+    handleClear();
   };
 
   //handle all the change logic for every input field
@@ -134,31 +137,35 @@ export function InventoryForm({
     setFormData((prev) => ({ ...prev, [name]: value }));
     //Find the specific key that matches the name of the input I just typed in, and update only that one value.
   };
-return (
+  return (
     <div className="w-full min-h-screen bg-[#0F1216] p-8 text-zinc-50 flex flex-col gap-10">
-      <form 
+      <form
         onSubmit={handleAddEntryBtn}
         className="grid grid-cols-10 gap-0 bg-[#1E2329] p-4 rounded-xl shadow-2xl border border-slate-700/50"
       >
-        {inventoryFields.map((field) => (
+   {inventoryFields.map((field) => (
   <div
     key={field.formName}
     className={`flex flex-col justify-between px-3 py-1 border-r border-slate-700 last:border-r-0 min-h-[60px]
       ${field.formName === "productName" ? "col-span-2" : "col-span-1"}`}
   >
-    {/* Label: Added whitespace-nowrap and truncate to keep it on one line */}
-    <label className="text-[10px] uppercase font-bold text-slate-500 mb-1 pl-1 whitespace-nowrap overflow-hidden text-ellipsis">
+    {/* Label: Now centered for EVERY column */}
+    <label 
+      className="text-[10px] uppercase font-bold text-slate-500 mb-1 whitespace-nowrap overflow-hidden text-ellipsis w-full text-center"
+    >
       {field.formLabel}
     </label>
 
-    {/* Input: Stays at the bottom because of justify-between */}
+    {/* Input: Remains centered for Name, left-aligned for numbers/dates */}
     <input
       type={field.type === "number" ? "text" : field.type}
-      value={
-        field.type === "number" && field.formName !== "productQty"
-          ? `$${formData[field.formName] ?? 0}`
-          : formData[field.formName] ?? ""
-      }
+     value={
+  field.type === "number"
+    ? field.formName === "productQty"
+      ? (formData[field.formName] ?? 0) // Just the number for Qty
+      : `$${formData[field.formName] ?? 0}` // $ + number for currency
+    : (formData[field.formName] ?? "") // Text/Date fallback
+}
       onChange={(e) => {
         let val = e.target.value;
         if (field.type === "number") {
@@ -167,11 +174,12 @@ return (
         handleChange(field.formName, val);
       }}
       placeholder={field.placeholder}
-      className="bg-transparent text-zinc-50 p-1 text-sm outline-none transition-all focus:bg-white/5 rounded w-full"
+      className={`bg-transparent text-zinc-50 p-1 text-sm outline-none transition-all focus:bg-white/5 rounded w-full text-center
+       `}
     />
   </div>
 ))}
-        
+
         <button
           type="submit"
           className="col-span-10 justify-self-center w-full max-w-xs mt-8 bg-sky-600 hover:bg-sky-500 text-white font-medium py-2 rounded-lg transition-colors shadow-lg"
@@ -188,43 +196,54 @@ return (
               <tr className="border-b border-slate-700 bg-slate-800/50">
                 {/* field === our current object */}
                 {inventoryFields.map((field) => (
-                  <th key={field.formName} className="px-6 py-4 text-[10px] uppercase tracking-wider text-slate-500 font-bold">
+                  <th
+                    key={field.formName}
+                    className="px-6 py-4 text-[10px] uppercase tracking-wider text-slate-500 font-bold"
+                  >
                     {field.formLabel}
                   </th>
                 ))}
               </tr>
             </thead>
-        <tbody className="divide-y divide-slate-700/50">
-  {addInventory.map((item) => (
-    <tr key={item.id} className="hover:bg-white/5 transition-colors">
-      
-      {/* 1. We iterate through the fields to create cells */}
-      {inventoryFields.map((field) => {
-        const rawValue = item[field.formName];
-        
-        // 2. Determine how to display the value
-        let displayValue = rawValue ?? "-";
+            <tbody className="divide-y divide-slate-700/50">
+              {addInventory.map((item) => (
+                <tr
+                  key={item.id}
+                  className="hover:bg-white/5 transition-colors"
+                >
+                  {/* 1. We iterate through the fields to create cells */}
+                  {inventoryFields.map((field) => {
+                    const rawValue = item[field.formName];
 
-        // 3. Apply your currency logic for numbers
-        if (field.type === "number" && field.formName !== "productQty") {
-          displayValue = `$${rawValue ?? 0}`;
-        }
-        return (
-          <td 
-            key={field.formName} 
-            className={`px-6 py-4 text-sm whitespace-nowrap 
-              ${field.formName === 'profit' 
-                ? (Number(rawValue) >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold') 
-                : 'text-zinc-300'
+                    // 2. Determine how to display the value
+                    let displayValue = rawValue ?? "-";
+
+                    // 3. Apply your currency logic for numbers
+                    if (
+                      field.type === "number" &&
+                      field.formName !== "productQty"
+                    ) {
+                      displayValue = `$${rawValue ?? 0}`;
+                    }
+                    return (
+                      <td
+                        key={field.formName}
+                        className={`px-6 py-4 text-sm whitespace-nowrap 
+              ${
+                field.formName === "profit"
+                  ? Number(rawValue) >= 0
+                    ? "text-emerald-400 font-bold"
+                    : "text-rose-400 font-bold"
+                  : "text-zinc-300"
               }`}
-          >
-            {displayValue}
-          </td>
-        );
-      })}
-    </tr>
-  ))}
-</tbody>
+                      >
+                        {displayValue}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
 
