@@ -14,6 +14,7 @@ interface DynamicInventoryFormProps {
 }
 
 interface InventoryEntry {
+  [key: string]: string | number;
   id: number;
   dateOfPurchase: string;
   productName: string;
@@ -102,24 +103,29 @@ export function InventoryForm({
     //looping through our inventoryFields and creates an object that should
     //populate data like so --> { dateOfPurchase: "", productName: "", costPerItem: 0, ... }
   });
+  //Delete this in a future PR
   console.log("this is our form data --->", formData);
 
+  // array for holding our data which are objects for when the user clicks on add entry
   const [addInventory, setAddInventory] = useState<InventoryEntry[]>([]);
 
-  const handleAddEntryBtn = (e: React.FormEvent) => {
+  const handleAddEntryBtn = (e: React.FormEvent, initialState: Record<string, string | number> = {}) => {
     e.preventDefault(); // Stops the page from refreshing
 
-    // 1. Create a "Snapshot" of the current form data with a unique ID
+    // Create a "Snapshot" of the current form data with a unique ID
     const newEntry: InventoryEntry = {
       ...formData, // Copies all the fields from your form
       id: Date.now(), // Adds a unique fingerprint for React keys
     } as InventoryEntry; // Tells TS this matches our interface
 
-    // 2. Add it to the list
+    // Add it to the list
     setAddInventory((prev) => [...prev, newEntry]);
 
-    // 3. Clear the form (Optional but recommended)
-    setFormData(formData);
+    // clear the form
+  const handleClear = () => {
+    setFormData(initialState)
+  }
+  handleClear()
   };
 
   //handle all the change logic for every input field
@@ -130,8 +136,6 @@ export function InventoryForm({
   };
 return (
     <div className="w-full min-h-screen bg-[#0F1216] p-8 text-zinc-50 flex flex-col gap-10">
-      
-      {/* SECTION 1: THE FORM */}
       <form 
         onSubmit={handleAddEntryBtn}
         className="grid grid-cols-9 gap-0 bg-[#1E2329] p-4 rounded-xl shadow-2xl border border-slate-700/50"
@@ -166,18 +170,19 @@ return (
         
         <button
           type="submit"
-          className="col-span-9 mt-4 bg-sky-600 hover:bg-sky-500 text-white font-medium py-2 rounded-lg transition-colors shadow-lg"
+          className="col-span-9 justify-self-center w-full max-w-xs mt-8 bg-sky-600 hover:bg-sky-500 text-white font-medium py-2 rounded-lg transition-colors shadow-lg"
         >
           Add Entry
         </button>
       </form>
 
-      {/* SECTION 2: THE TABLE (Now outside the form for full width) */}
+      {/* Table for our newly added entries */}
       <div className="w-full overflow-hidden rounded-xl border border-slate-700/50 bg-[#1E2329] shadow-2xl">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[1000px] text-left border-collapse table-auto">
             <thead>
               <tr className="border-b border-slate-700 bg-slate-800/50">
+                {/* field === our current object */}
                 {inventoryFields.map((field) => (
                   <th key={field.formName} className="px-6 py-4 text-[10px] uppercase tracking-wider text-slate-500 font-bold">
                     {field.formLabel}
@@ -185,23 +190,37 @@ return (
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-700/50">
-              {addInventory.map((item) => (
-                <tr key={item.id} className="hover:bg-white/5 transition-colors group">
-                  <td className="px-6 py-4 text-sm text-zinc-400 whitespace-nowrap">{item.dateOfPurchase}</td>
-                  <td className="px-6 py-4 text-sm font-medium text-zinc-50 whitespace-nowrap">{item.productName}</td>
-                  <td className="px-6 py-4 text-sm text-zinc-300">${item.costPerItem ?? 0}</td>
-                  <td className="px-6 py-4 text-sm text-zinc-300">{item.productQty ?? 0}</td>
-                  <td className="px-6 py-4 text-sm text-zinc-300">${item.totalCost ?? 0}</td>
-                  <td className="px-6 py-4 text-sm text-zinc-300">${item.soldListPrice ?? 0}</td>
-                  <td className="px-6 py-4 text-sm text-zinc-300">${item.totalPriceSold ?? 0}</td>
-                  <td className="px-6 py-4 text-sm text-zinc-300">${item.shippingCost ?? 0}</td>
-                  <td className={`px-6 py-4 text-sm font-bold ${Number(item.profit) >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
-                    ${item.profit ?? 0}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+        <tbody className="divide-y divide-slate-700/50">
+  {addInventory.map((item) => (
+    <tr key={item.id} className="hover:bg-white/5 transition-colors">
+      
+      {/* 1. We iterate through the fields to create cells */}
+      {inventoryFields.map((field) => {
+        const rawValue = item[field.formName];
+        
+        // 2. Determine how to display the value
+        let displayValue = rawValue ?? "-";
+
+        // 3. Apply your currency logic for numbers
+        if (field.type === "number" && field.formName !== "productQty") {
+          displayValue = `$${rawValue ?? 0}`;
+        }
+        return (
+          <td 
+            key={field.formName} 
+            className={`px-6 py-4 text-sm whitespace-nowrap 
+              ${field.formName === 'profit' 
+                ? (Number(rawValue) >= 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold') 
+                : 'text-zinc-300'
+              }`}
+          >
+            {displayValue}
+          </td>
+        );
+      })}
+    </tr>
+  ))}
+</tbody>
           </table>
         </div>
 
