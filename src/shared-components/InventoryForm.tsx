@@ -138,39 +138,43 @@ return (
     <div className="w-full min-h-screen bg-[#0F1216] p-8 text-zinc-50 flex flex-col gap-10">
       <form 
         onSubmit={handleAddEntryBtn}
-        className="grid grid-cols-9 gap-0 bg-[#1E2329] p-4 rounded-xl shadow-2xl border border-slate-700/50"
+        className="grid grid-cols-10 gap-0 bg-[#1E2329] p-4 rounded-xl shadow-2xl border border-slate-700/50"
       >
         {inventoryFields.map((field) => (
-          <div
-            key={field.formName}
-            className="flex flex-col px-2 border-r border-slate-700 last:border-r-0"
-          >
-            <label className="text-[10px] uppercase font-bold text-slate-500 mb-1 pl-1">
-              {field.formLabel}
-            </label>
-            <input
-              type={field.type === "number" ? "text" : field.type}
-              value={
-                field.type === "number" && field.formName !== "productQty"
-                  ? `$${formData[field.formName] ?? 0}`
-                  : formData[field.formName] ?? ""
-              }
-              onChange={(e) => {
-                let val = e.target.value;
-                if (field.type === "number") {
-                  val = val.replace(/[^0-9.]/g, ""); // Clean the $ for the state
-                }
-                handleChange(field.formName, val);
-              }}
-              placeholder={field.placeholder}
-              className="bg-transparent text-zinc-50 p-1 text-sm outline-none transition-all focus:bg-white/5 rounded [&::-webkit-calendar-picker-indicator]:invert"
-            />
-          </div>
-        ))}
+  <div
+    key={field.formName}
+    className={`flex flex-col justify-between px-3 py-1 border-r border-slate-700 last:border-r-0 min-h-[60px]
+      ${field.formName === "productName" ? "col-span-2" : "col-span-1"}`}
+  >
+    {/* Label: Added whitespace-nowrap and truncate to keep it on one line */}
+    <label className="text-[10px] uppercase font-bold text-slate-500 mb-1 pl-1 whitespace-nowrap overflow-hidden text-ellipsis">
+      {field.formLabel}
+    </label>
+
+    {/* Input: Stays at the bottom because of justify-between */}
+    <input
+      type={field.type === "number" ? "text" : field.type}
+      value={
+        field.type === "number" && field.formName !== "productQty"
+          ? `$${formData[field.formName] ?? 0}`
+          : formData[field.formName] ?? ""
+      }
+      onChange={(e) => {
+        let val = e.target.value;
+        if (field.type === "number") {
+          val = val.replace(/[^0-9.]/g, "");
+        }
+        handleChange(field.formName, val);
+      }}
+      placeholder={field.placeholder}
+      className="bg-transparent text-zinc-50 p-1 text-sm outline-none transition-all focus:bg-white/5 rounded w-full"
+    />
+  </div>
+))}
         
         <button
           type="submit"
-          className="col-span-9 justify-self-center w-full max-w-xs mt-8 bg-sky-600 hover:bg-sky-500 text-white font-medium py-2 rounded-lg transition-colors shadow-lg"
+          className="col-span-10 justify-self-center w-full max-w-xs mt-8 bg-sky-600 hover:bg-sky-500 text-white font-medium py-2 rounded-lg transition-colors shadow-lg"
         >
           Add Entry
         </button>
