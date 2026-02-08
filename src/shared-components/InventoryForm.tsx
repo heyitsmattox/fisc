@@ -157,26 +157,28 @@ export function InventoryForm({
     </label>
 
     {/* Input: Remains centered for Name, left-aligned for numbers/dates */}
-    <input
-      type={field.type === "number" ? "text" : field.type}
-     value={
-  field.type === "number"
-    ? field.formName === "productQty"
-      ? (formData[field.formName] ?? 0) // Just the number for Qty
-      : `$${formData[field.formName] ?? 0}` // $ + number for currency
-    : (formData[field.formName] ?? "") // Text/Date fallback
-}
-      onChange={(e) => {
-        let val = e.target.value;
-        if (field.type === "number") {
-          val = val.replace(/[^0-9.]/g, "");
-        }
-        handleChange(field.formName, val);
-      }}
-      placeholder={field.placeholder}
-      className={`bg-transparent text-zinc-50 p-1 text-sm outline-none transition-all focus:bg-white/5 rounded w-full text-center
-       `}
-    />
+   <input
+  type={field.type === "number" ? "text" : field.type}
+  value={
+    field.type === "number"
+      ? field.formName === "productQty"
+        ? (formData[field.formName] ?? 0)
+        : `$${formData[field.formName] ?? 0}`
+      : (formData[field.formName] ?? "")
+  }
+  onChange={(e) => {
+    let val = e.target.value;
+    if (field.type === "number") {
+      val = val.replace(/[^0-9.]/g, "");
+    }
+    handleChange(field.formName, val);
+  }}
+  placeholder={field.placeholder}
+  className={`bg-transparent text-zinc-50 p-1 text-sm outline-none transition-all focus:bg-white/5 rounded w-full text-center 
+    ${field.formName === "productName" ? "text-center" : "text-left"}
+    /* The magic line for the white calendar icon */
+    [&::-webkit-calendar-picker-indicator]:invert`}
+/>
   </div>
 ))}
 
