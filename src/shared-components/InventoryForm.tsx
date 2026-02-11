@@ -130,13 +130,34 @@ export function InventoryForm({
     };
     handleClear();
   };
+ 
 
-  //handle all the change logic for every input field
-  const handleChange = (name: string, value: string | number) => {
-    //Taking all the current form data and keeping it exactly as it is.
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    //Find the specific key that matches the name of the input I just typed in, and update only that one value.
-  };
+
+ //handle all the change logic for every input field
+const handleChange = (name: string, value: string) => {
+  setFormData((prev) => {
+    // Start with the new value
+    const updatedData = { ...prev, [name]: value };
+
+    // Parse values (defaulting to 0 for safety)
+    const costPer = parseFloat(updatedData.costPerItem as string) || 0;
+    const qty = parseInt(updatedData.productQty as string) || 0;
+    const listPrice = parseFloat(updatedData.soldListPrice as string) || 0;
+    const shipping = parseFloat(updatedData.shippingCost as string) || 0;
+
+    // Perform the Chain Calculations
+    const calculatedTotalCost = costPer * qty;
+    const calculatedTotalPriceSold = listPrice * qty; // <--- Your new logic
+    const calculatedProfit = calculatedTotalPriceSold - calculatedTotalCost - shipping;
+
+    return {
+      ...updatedData,
+      totalCost: calculatedTotalCost.toFixed(2),
+      totalPriceSold: calculatedTotalPriceSold.toFixed(2),
+      profit: calculatedProfit.toFixed(2),
+    };
+  });
+};
   return (
     <div className="w-full min-h-screen bg-[#0F1216] p-8 text-zinc-50 flex flex-col gap-10">
       <form
@@ -157,7 +178,7 @@ export function InventoryForm({
     </label>
 
     {/* Input: Remains centered for Name, left-aligned for numbers/dates */}
-   <input
+<input
   type={field.type === "number" ? "text" : field.type}
   value={
     field.type === "number"
@@ -174,9 +195,24 @@ export function InventoryForm({
     handleChange(field.formName, val);
   }}
   placeholder={field.placeholder}
-  className={`bg-transparent text-zinc-50 p-1 text-sm outline-none transition-all focus:bg-white/5 rounded w-full text-center 
+  
+  // Adjusted ReadOnly logic to include Total Price Sold
+  readOnly={["totalCost", "totalPriceSold", "profit"].includes(field.formName)}
+  tabIndex={["totalCost", "totalPriceSold", "profit"].includes(field.formName) ? -1 : 0}
+
+  className={`bg-transparent p-1 text-sm outline-none transition-all rounded w-full
+    /* 1. Color Logic: Make profit stand out */
+    ${field.formName === 'profit' ? 'text-emerald-400 font-bold' : 'text-zinc-50'}
+
+    /* 2. Alignment Logic */
     ${field.formName === "productName" ? "text-center" : "text-left"}
-    /* The magic line for the white calendar icon */
+    
+    /* 3. ReadOnly Styling: Now also dims Total Price Sold */
+    ${["totalCost", "totalPriceSold", "profit"].includes(field.formName)
+      ? "opacity-50 cursor-not-allowed select-none" 
+      : "focus:bg-white/5"}
+
+    /* 4. White Calendar Icon */
     [&::-webkit-calendar-picker-indicator]:invert`}
 />
   </div>
