@@ -14,16 +14,19 @@ interface DynamicInventoryFormProps {
 }
 
 interface InventoryEntry {
-  [key: string]: string | number;
-  id: number;
-  dateOfPurchase: string;
-  productName: string;
-  costPerItem: number;
-  productQty: number;
-  totalCost: number;
-  soldListPrice: number;
-  totalPriceSold: number;
-  shippingCost: number;
+  [key: string]: string | number | undefined;
+  id?: number;
+  user_id?: string;
+  created_at?: string;
+  
+  purchase_date: string;
+  product_name: string;
+  cost_per_item: number;
+  quantity: number;
+  total_cost: number;
+  sold_price: number;
+  total_price_sold: number;
+  shipping_cost: number;
   profit: number;
 }
 
