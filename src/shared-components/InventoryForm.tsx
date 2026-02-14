@@ -18,7 +18,7 @@ interface InventoryEntry {
   id?: number;
   user_id?: string;
   created_at?: string;
-  
+
   purchase_date: string;
   product_name: string;
   cost_per_item: number;
@@ -32,56 +32,15 @@ interface InventoryEntry {
 
 //blueprint where every every line in our array represents our a single input
 export const inventoryFields: FieldConfig[] = [
-  {
-    formName: "dateOfPurchase",
-    formLabel: "Purchase Date",
-    type: "date",
-    defaultValue: "",
-  },
-  {
-    formName: "productName",
-    formLabel: "Product Name",
-    type: "text",
-    defaultValue: "",
-    placeholder: "Product name",
-  },
-  {
-    formName: "costPerItem",
-    formLabel: "Cost Per Item",
-    type: "number",
-    defaultValue: 0,
-  },
-  {
-    formName: "productQty",
-    formLabel: "Product Qty",
-    type: "number",
-    defaultValue: 0,
-  },
-  {
-    formName: "totalCost",
-    formLabel: "Total Cost",
-    type: "number",
-    defaultValue: 0,
-  },
-  {
-    formName: "soldListPrice",
-    formLabel: "Sold List Price",
-    type: "number",
-    defaultValue: 0,
-  },
-  {
-    formName: "totalPriceSold",
-    formLabel: "Total Price Sold",
-    type: "number",
-    defaultValue: 0,
-  },
-  {
-    formName: "shippingCost",
-    formLabel: "Shipping Cost",
-    type: "number",
-    defaultValue: 0,
-  },
-  { formName: "profit", formLabel: "Profit", type: "number", defaultValue: 0 },
+  { formName: "purchase_date", formLabel: "Date", type: "date", placeholder: "" },
+  { formName: "product_name", formLabel: "Product Name", type: "text", placeholder: "Item Name" },
+  { formName: "cost_per_item", formLabel: "Cost Per Item", type: "number", placeholder: "0.00" },
+  { formName: "quantity", formLabel: "Qty", type: "number", placeholder: "0" },
+  { formName: "total_cost", formLabel: "Total Cost", type: "number", placeholder: "0.00" },
+  { formName: "sold_price", formLabel: "Sold Price", type: "number", placeholder: "0.00" },
+  { formName: "total_price_sold", formLabel: "Total Price Sold", type: "number", placeholder: "0.00" },
+  { formName: "shipping_cost", formLabel: "Shipping", type: "number", placeholder: "0.00" },
+  { formName: "profit", formLabel: "Profit", type: "number", placeholder: "0.00" },
 ];
 
 export function InventoryForm({
@@ -143,10 +102,10 @@ const handleChange = (name: string, value: string) => {
     const updatedData = { ...prev, [name]: value };
 
     // Parse values defaulting to 0 for safety in case user leaves blank or adds a weird character
-    const costPer = parseFloat(updatedData.costPerItem as string) || 0;
-    const qty = parseInt(updatedData.productQty as string) || 0;
-    const listPrice = parseFloat(updatedData.soldListPrice as string) || 0;
-    const shipping = parseFloat(updatedData.shippingCost as string) || 0;
+    const costPer = parseFloat(updatedData.cost_per_item as string) || 0;
+    const qty = parseInt(updatedData.quantity as string) || 0;
+    const listPrice = parseFloat(updatedData.sold_price as string) || 0;
+    const shipping = parseFloat(updatedData.shipping_cost as string) || 0;
 
     // Perform the Chain Calculations
     const calculatedTotalCost = costPer * qty;
@@ -156,9 +115,9 @@ const handleChange = (name: string, value: string) => {
     return {
       ...updatedData,
       //toFixed(2) ensures our calculations look like money. e.g $10.50
-      totalCost: calculatedTotalCost.toFixed(2),
-      totalPriceSold: calculatedTotalPriceSold.toFixed(2),
-      profit: calculatedProfit.toFixed(2),
+      total_cost: Number(calculatedTotalCost.toFixed(2)),
+      total_price_sold: Number(calculatedTotalPriceSold.toFixed(2)),
+      profit: Number(calculatedProfit.toFixed(2)),
     };
   });
 };
@@ -187,7 +146,7 @@ const handleChange = (name: string, value: string) => {
   type={field.type === "number" ? "text" : field.type}
   value={
     field.type === "number"
-      ? field.formName === "productQty"
+      ? field.formName === "quantity"
         ? (formData[field.formName] ?? 0)
         : `$${formData[field.formName] ?? 0}`
       : (formData[field.formName] ?? "")
