@@ -1,9 +1,9 @@
 import { useState, type JSX } from "react";
 import { supabase } from "../lib/supabaseClient";
-import type { Database } from '../lib/database.types';
+import type { Database } from "../lib/database.types";
 
 // This pulls the exact row definition from your 'inventory' table
-type InventoryEntry = Database['public']['Tables']['inventory']['Row'];
+type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
 
 interface FieldConfig {
   formName: keyof InventoryEntry;
@@ -13,29 +13,10 @@ interface FieldConfig {
   placeholder?: string;
 }
 
-
-
 interface DynamicInventoryFormProps {
   config: FieldConfig[];
-  onSubmit: (data: Record<string, unknown>) => void;
+
 }
-
-// interface InventoryEntry {
-//   [key: string]: string | number | undefined;
-//   id?: string;
-//   user_id?: string;
-//   created_at?: string;
-
-//   purchase_date: string;
-//   product_name: string;
-//   cost_per_item: number;
-//   quantity: number;
-//   total_cost: number;
-//   sold_price: number;
-//   total_price_sold: number;
-//   shipping_cost: number;
-//   profit: number;
-// }
 
 //blueprint where every every line in our array represents our a single input
 export const inventoryFields: FieldConfig[] = [
@@ -93,7 +74,6 @@ export const inventoryFields: FieldConfig[] = [
 export function InventoryForm({
   //config is our "smart" default in case we reuse this component. By leaving the config prop undefined or not passed, it'll plug in our data from FieldConfig above. If we need different fields we can pass config={otherFieldName}
   config = inventoryFields,
-  onSubmit,
   //Telling typescript to only accept an object that has exactly what is defined in the DynamicInventoryFormProps interface.
 }: DynamicInventoryFormProps): JSX.Element {
   const [formData, setFormData] = useState(() => {
@@ -112,9 +92,6 @@ export function InventoryForm({
     //looping through our inventoryFields and creates an object that should
     //populate data like so --> { dateOfPurchase: "", product_name: "", cost_per_item: 0, ... }
   });
-  //Delete this in a future PR
-  console.log("this is our form data --->", formData);
-
   // array for holding our data which are objects for when the user clicks on add entry
   const [addInventory, setAddInventory] = useState<InventoryEntry[]>([]);
 
@@ -129,7 +106,6 @@ export function InventoryForm({
     //   ...formData, // Copies all the fields from your form
     // } as InventoryEntry; // Tells TS this matches our interface
 
-
     const { data, error } = await supabase
       .from("inventory")
       .insert([formData])
@@ -139,12 +115,11 @@ export function InventoryForm({
       console.error("Failed to save to database:", error.message);
       return;
     }
-    if(data && data.length > 0) {
-      const officialEntry = data[0]
-       setAddInventory((prev) => [...prev, officialEntry]);
+    if (data && data.length > 0) {
+      const officialEntry = data[0];
+      setAddInventory((prev) => [...prev, officialEntry]);
     }
 
-   
     // clear the form
     const handleClear = () => {
       setFormData(initialState);

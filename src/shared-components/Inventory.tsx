@@ -1,11 +1,9 @@
 import Navbar from "./Navbar";
 import SearchBar from "./SearchBar";
 import { InventoryForm, inventoryFields } from "./InventoryForm";
+
 const Inventory = () => {
-  const handleSave = (data: Record<string, unknown>) => {
-    console.log("Saved Data:", data);
-    // Eventually, you'll put your database save logic here
-  };
+
   return (
     <>
       <div>
@@ -26,7 +24,7 @@ const Inventory = () => {
         />
       </div>
 
-      <InventoryForm config={inventoryFields} onSubmit={handleSave} />
+      <InventoryForm config={inventoryFields}  />
     </>
   );
 };
