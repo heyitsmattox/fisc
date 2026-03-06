@@ -25,12 +25,26 @@ useEffect(() => {
   }
   fetchData()
 }, [])
-console.log(inventoryData)
+console.log('here is our data that we will map through ---->', inventoryData)
+
+let totalProfit = inventoryData.reduce((acc, entry) => {
+  return acc + (entry.profit ?? 0)
+}, 0)
+
+console.log('total profit value --->', totalProfit)
+
+// inventoryData.map((entry) => {
+//   console.log('here is each entry in our inventory data ---->', entry.profit)
+// console.log('total profit value --->', totalProfit)
+  
+// })
 
   return (
     <>
     <Navbar showNavbarMenuIcon={true} showFiscImageLogo={false} />
     <h1>Dashboard component placeholder</h1>
+    <div>{totalProfit}</div>
+    
 
     </>
   );
