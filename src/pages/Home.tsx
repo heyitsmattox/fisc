@@ -6,7 +6,6 @@ const Home: React.FC = (): ReactElement => {
   return (
     <>
       <Navbar showNavbarMenuIcon={true} showFiscImageLogo={false} />
-
     </>
   )
 }
