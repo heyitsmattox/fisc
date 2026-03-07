@@ -33,11 +33,6 @@ let totalProfit = inventoryData.reduce((acc, entry) => {
 
 console.log('total profit value --->', totalProfit)
 
-// inventoryData.map((entry) => {
-//   console.log('here is each entry in our inventory data ---->', entry.profit)
-// console.log('total profit value --->', totalProfit)
-  
-// })
 
   return (
     <>
