@@ -32,11 +32,21 @@ const totalProfit: number = inventoryData?.reduce((acc, entry) => {
   return acc + (entry.profit ?? 0)
 }, 0) ?? 0
 
+const formatTotalProfit: string = totalProfit.toLocaleString("en-US", {
+  style: "currency",
+  currency: "USD",
+});
+
 const totalPaid: number = inventoryData?.reduce((acc, entry) => {
   return acc + (entry.total_cost ?? 0)
 }, 0) ?? 0
 
-const formattedTotalPaid = `$${(totalPaid ?? 0).toFixed(2)}`;
+const formatTotalPaid: string = totalPaid.toLocaleString("en-US", {
+  style: "currency",
+  currency: "USD",
+});
+
+
 
 
 
@@ -52,18 +62,18 @@ const formattedTotalPaid = `$${(totalPaid ?? 0).toFixed(2)}`;
       <div className="flex flex-col">
         {/* Section 1: Profit (Total Value) */}
         <div className="border-b border-slate-700/50 pb-6 mb-6">
-          <div className="text-4xl font-bold text-zinc-50 tracking-tight">
-            ${totalProfit?.toFixed(2)}
+          <div className="text-4xl font-bold text-emerald-400 tracking-tight">
+            {formatTotalProfit ? formatTotalProfit : "$0.00"}
           </div>
           <div className="text-sky-300 text-xs font-bold uppercase mt-2 tracking-wide">
-            Total Value
+             Profit
           </div>
         </div>
 
         {/* Section 2: Total Paid */}
         <div>
           <div className="text-4xl font-bold text-zinc-50 tracking-tight">
-            {totalPaid?.toFixed(2) ? formattedTotalPaid : "$0.00"}
+            {formatTotalPaid ? formatTotalPaid : "$0.00"}
           </div>
           <div className="text-sky-300 text-xs font-bold uppercase mt-2 tracking-wide">
             Total Paid
