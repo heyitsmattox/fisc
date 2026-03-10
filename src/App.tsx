@@ -4,7 +4,7 @@ import Inventory from "./shared-components/Inventory";
 import Portfolio from "./shared-components/Portfolio";
 import Settings from "./pages/Settings";
 import { Routes, Route } from "react-router-dom";
-import { Query, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const App = () => {
   const queryClient = new QueryClient();

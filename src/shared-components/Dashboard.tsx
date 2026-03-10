@@ -1,46 +1,24 @@
 import Navbar from "./Navbar";
-import { supabase } from "../lib/supabaseClient"
-import { useEffect, useState } from "react";
-import type { Database } from "../lib/database.types";
+import { PerformanceCard } from "./PerformanceCard";
+import { useInventoryData } from "../hooks/useInventoryData";
 
-type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
 
-const Dashboard = () => {
-  const [inventoryData, setInventoryData ] = useState<InventoryEntry[]>([])
-  const [fetchError, setFetchError] = useState<string | null>("");
+export const Dashboard = () => {
+  const { totalProfit, totalPaid, isLoading, isError } = useInventoryData();
 
-useEffect(() => {
-  const fetchData = async () => {
-      const {data, error } = await supabase
-      .from("inventory")
-      .select()
-      if (error) {
-        setFetchError("Could not fetch the data from our inventory database")
-        console.log(error)
-      }
-      if(data) {
-       setInventoryData(data)
-       setFetchError(null)
-      }
-  }
-  fetchData()
-}, [])
-console.log('here is our data that we will map through ---->', inventoryData)
-
-let totalProfit = inventoryData.reduce((acc, entry) => {
-  return acc + (entry.profit ?? 0)
-}, 0)
-
-console.log('total profit value --->', totalProfit)
-
+  if (isLoading) return <div className="p-8 text-white">Loading Stats...</div>;
+  if (isError) return <div className="p-8 text-rose-500">Error loading dashboard.</div>;
 
   return (
     <>
     <Navbar showNavbarMenuIcon={true} showFiscImageLogo={false} />
-    <h1>Dashboard component placeholder</h1>
-    <div>{totalProfit}</div>
+    <div className="p-8 min-h-screen]">
+   <div className="max-w-7xl mx-auto flex flex-col gap-10"></div>
+    <div className="flex w-full gap-6">
+     <PerformanceCard totalProfit={totalProfit} totalPaid={totalPaid} />
+    </div>
+    </div>
     
-
     </>
   );
 };
