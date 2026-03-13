@@ -10,11 +10,6 @@ export const PerformanceCard = ({
   totalProfit,
   totalPaid,
 }: PerformanceCardProps): JSX.Element => {
-  // const formatCurrency = (val: number) =>
-  //   val.toLocaleString("en-US", {
-  //     style: "currency",
-  //     currency: "USD",
-  //   });
 
   return (
     <div className="w-full sm:max-w-sm md:max-w-xs bg-[#1E2329] border-t border-t-white border border-slate-700/50 rounded-xl p-6 shadow-2xl flex flex-col gap-6 mx-auto md:mx-0">
