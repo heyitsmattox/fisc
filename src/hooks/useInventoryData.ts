@@ -20,12 +20,19 @@ export const useInventoryData = () => {
   const totalProfit = inventory.reduce((acc, entry) => acc + (entry.profit ?? 0), 0);
   const totalPaid = inventory.reduce((acc, entry) => acc + (entry.total_cost ?? 0), 0);
 
+  const numberOfSales = inventory.length + 1;
+  const profit = totalProfit - totalPaid;
+  const roi = totalPaid > 0 ? (profit / totalPaid) * 100 : 0;
+
   // Return everything for UI
   return {
     ...query,
     inventory,
     totalProfit,
     totalPaid,
+    numberOfSales,
+    profit,
+    roi,
   };
 };
 // !!! notes !!!
