@@ -1,7 +1,7 @@
 import Home from "./pages/Home";
-import Dashboard from "./shared-components/Dashboard";
-import Inventory from "./shared-components/Inventory";
-import Portfolio from "./shared-components/Portfolio";
+import Dashboard from "./shared-components/dashboard/Dashboard";
+import Inventory from "./shared-components/inventory/Inventory";
+import Portfolio from "./shared-components/portfolio/Portfolio";
 import Settings from "./pages/Settings";
 import { Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

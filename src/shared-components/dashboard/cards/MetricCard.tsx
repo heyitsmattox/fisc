@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { formatCurrency } from "../../utils.ts/formatters";
+import { formatCurrency } from "../../../utils.ts/formatters";
 
 interface MetricCardProps {
   metric: number;
@@ -35,7 +35,7 @@ export const MetricCard = ({metric, metricString, backgroundVariant = "default",
           <div className="text-3xl md:text-4xl font-bold  tracking-tight">
             {displayProfitValue}
           </div>
-          <div className=" text-xs font-bold uppercase mt-2 tracking-wide">
+          <div className=" text-xs font-bold uppercase mt-2 tracking-wide text-white">
             {metricString}
           </div>
         </div>

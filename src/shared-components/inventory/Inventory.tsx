@@ -1,5 +1,5 @@
-import Navbar from "./Navbar";
-import SearchBar from "./SearchBar";
+import Navbar from "../layout/Navbar";
+import SearchBar from "../ui/SearchBar";
 import { InventoryForm, inventoryFields } from "./InventoryForm";
 
 const Inventory = () => {

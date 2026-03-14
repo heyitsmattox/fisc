@@ -1,6 +1,6 @@
 
 import type { ReactElement } from "react";
-import Navbar from "../shared-components/Navbar";
+import Navbar from "../shared-components/layout/Navbar";
 
 const Home: React.FC = (): ReactElement => {
   return (

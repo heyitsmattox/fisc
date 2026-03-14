@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { formatCurrency } from "../utils.ts/formatters";
+import { formatCurrency } from "../../../utils.ts/formatters";
 
 interface PerformanceCardProps {
   totalProfit: number;
