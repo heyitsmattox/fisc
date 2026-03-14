@@ -21,20 +21,21 @@ export const Dashboard = () => {
   return (
     <>
       <Navbar showNavbarMenuIcon={true} showFiscImageLogo={false} />
-      <div className="p-8 min-h-screen]">
-        <div className="max-w-7xl mx-auto flex flex-col gap-10"></div>
+      <div className="p-8 min-h-screen mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+        <div className=" mx-auto flex flex-col gap-10"></div>
         <div className="flex w-full gap-6">
           <PerformanceCard totalProfit={totalProfit} totalPaid={totalPaid} />
           <div className="flex flex-col gap-4">
             <MetricCard
               metricString={"Number of Sales"}
               metric={numberOfSales}
-              backgroundVariant="emerald"
+              backgroundVariant="default"
             />
             <MetricCard
               metricString={"Profit"}
               metric={profit}
               backgroundVariant="default"
+              textColorVariant="emerald"
             />
           </div>
         </div>

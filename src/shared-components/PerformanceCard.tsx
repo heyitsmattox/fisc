@@ -18,7 +18,7 @@ export const PerformanceCard = ({
       </h2>
       <div className="flex flex-col">
         <div className="border-b border-slate-700/50 pb-6 mb-6">
-          <div className="text-3xl md:text-4xl font-bold text-emerald-400 tracking-tight">
+          <div className="text-3xl md:text-4xl font-bold text-zinc-50 tracking-tight">
             {formatCurrency(totalProfit)}
           </div>
           <div className="text-sky-300 text-xs font-bold uppercase mt-2 tracking-wide">
