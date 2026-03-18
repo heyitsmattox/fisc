@@ -8,8 +8,6 @@ interface RoiCardProps {
 export const RoiCard = ({roi}: RoiCardProps): JSX.Element => {
   const [positive, setPositive] = useState(roi >= 0);
 
-  console.log("ROI value in RoiCard:", roi); // Debug log to check the ROI value
-
   if (roi >= 0 && !positive) {
     setPositive(true);
   } else if (roi < 0 && positive) {
