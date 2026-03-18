@@ -17,7 +17,7 @@ export const RoiCard = ({roi}: RoiCardProps): JSX.Element => {
   }
 
 return (
-    <div className="w-48 bg-[#1E2329] border border-slate-600/50 rounded-xl p-3 shadow-2xl flex flex-col h-fit">
+    <div className=" bg-[#1E2329] border border-slate-600/50 rounded-xl p-3 pl-8 shadow-2xl flex flex-col h-fit">
       <div className="flex flex-col">
         <div className="flex flex-col">
           <div className="text-xl md:text-2xl font-bold tracking-tight text-white">

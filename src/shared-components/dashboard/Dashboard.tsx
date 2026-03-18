@@ -57,9 +57,9 @@ return (
               <MetricCard
               isCompact={true}
               metricString={"Projected Annual ROI"}
-              metric={profit}
+              metric={0} // Placeholder value, replace with actual projection logic
               backgroundVariant="default"
-              textColorVariant="emerald"
+              textColorVariant="default"
             />
           </div>
           
