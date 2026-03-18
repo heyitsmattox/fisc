@@ -7,7 +7,7 @@ interface MetricCardProps {
   metricString: string;
   textColorVariant?: "emerald" | "default";
   isCompact?: boolean;
-  avgProfitPerSale?: number; // Optional prop for average profit per sale
+  avgProfitPerSale?: number; 
 
 }
 

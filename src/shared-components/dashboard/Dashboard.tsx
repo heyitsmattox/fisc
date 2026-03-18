@@ -29,7 +29,7 @@ return (
         <div className="flex w-full gap-6">
           <PerformanceCard totalProfit={totalProfit} totalPaid={totalPaid} />
           
-          {/* Middle Column: Only Sales and Profit */}
+          {/* Middle Column*/}
           <div className="flex flex-col gap-4">
             <MetricCard
               metricString={"Number of Sales"}
@@ -42,15 +42,15 @@ return (
               backgroundVariant="default"
               textColorVariant="emerald"
             />
-          </div> {/* <--- We moved this closing tag up! */}
+          </div> 
 
-          {/* Right Column: ROI Card is now its own column */}
+          {/* Right Column */}
           <div className="flex flex-col gap-4 w-full md:w-auto">
             <RoiCard roi={roi} />
              <MetricCard
               isCompact={true}
               metricString={"Avg Profit per Sale"}
-              metric={numberOfSales > 1 ? profit / (numberOfSales - 1) : profit} // Avoid division by zero
+              metric={numberOfSales > 1 ? profit / (numberOfSales - 1) : profit} 
               backgroundVariant="default"
               textColorVariant="default"
             />
