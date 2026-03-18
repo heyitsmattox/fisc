@@ -4,12 +4,14 @@ import { formatCurrency } from "../../../utils.ts/formatters";
 interface MetricCardProps {
   metric: number;
   backgroundVariant?: "emerald" | "rose" | "default";
-  metricString: "Number of Sales" | "Profit" | "ROI";
+  metricString: string;
   textColorVariant?: "emerald" | "default";
+  isCompact?: boolean;
+  avgProfitPerSale?: number; // Optional prop for average profit per sale
+
 }
 
-export const MetricCard = ({metric, metricString, backgroundVariant = "default", textColorVariant = "default"}: MetricCardProps): JSX.Element => {
-
+export const MetricCard = ({metric, metricString, backgroundVariant = "default", textColorVariant = "default", isCompact = false, avgProfitPerSale}: MetricCardProps): JSX.Element => {
   const borderVariants = {
     emerald: "border-emerald-400/50",
     rose: "border-rose-400/50",
@@ -24,22 +26,27 @@ export const MetricCard = ({metric, metricString, backgroundVariant = "default",
   const borderColor = borderVariants[backgroundVariant as keyof typeof borderVariants] || borderVariants.slate;
   const textColor = textColorVariants[textColorVariant as keyof typeof textColorVariants] || textColorVariants.default;
 
-  const displayProfitValue  = metricString === "Profit" 
+  const displayProfitValue  = metricString === "Profit" || metricString === "Avg Profit per Sale" 
     ? formatCurrency(metric) 
     : metric.toLocaleString();
   
   return (
-     <div className={`w-full sm:max-w-sm md:max-w-xs bg-[#1E2329] border ${borderColor} rounded-xl p-6 shadow-2xl flex flex-col gap-6 mx-auto md:mx-0 ${textColor}`}>
+    <div className={`w-full sm:max-w-sm md:max-w-xs bg-[#1E2329] border ${borderColor} rounded-xl shadow-2xl flex flex-col mx-auto md:mx-0 h-fit
+      ${isCompact ? "p-8 gap-1" : "p-6 gap-6"} 
+    `}>
       <div className="flex flex-col">
-        <div className="border-b border-slate-700/50 pb-6 mb-6">
-          <div className="text-3xl md:text-4xl font-bold  tracking-tight">
+        {/* Only show the divider/spacing if NOT compact */}
+        <div className={`${!isCompact ? "border-b border-slate-700/50 pb-6 mb-6" : ""}`}>
+          <div className={`font-bold tracking-tight ${textColor} 
+            ${isCompact ? "text-2xl" : "text-3xl md:text-4xl"}
+          `}>
             {displayProfitValue}
           </div>
-          <div className=" text-xs font-bold uppercase mt-2 tracking-wide text-white">
+          <div className="text-xs font-bold uppercase mt-1 tracking-wide text-slate-400">
             {metricString}
           </div>
         </div>
       </div>
     </div>
-  )
-  };
+  );
+};

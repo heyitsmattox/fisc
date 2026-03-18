@@ -45,7 +45,25 @@ return (
           </div> {/* <--- We moved this closing tag up! */}
 
           {/* Right Column: ROI Card is now its own column */}
-          <RoiCard roi={roi} />
+          <div className="flex flex-col gap-4 w-full md:w-auto">
+            <RoiCard roi={roi} />
+             <MetricCard
+              isCompact={true}
+              metricString={"Avg Profit per Sale"}
+              metric={numberOfSales > 1 ? profit / (numberOfSales - 1) : profit} // Avoid division by zero
+              backgroundVariant="default"
+              textColorVariant="default"
+            />
+              <MetricCard
+              isCompact={true}
+              metricString={"Projected Annual ROI"}
+              metric={profit}
+              backgroundVariant="default"
+              textColorVariant="emerald"
+            />
+          </div>
+          
+          
         </div>
 
       </div>
