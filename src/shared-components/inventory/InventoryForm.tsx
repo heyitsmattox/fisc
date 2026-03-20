@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
-import { supabase } from "../lib/supabaseClient";
-import type { Database } from "../lib/database.types";
+import { supabase } from "../../lib/supabaseClient";
+import type { Database } from "../../lib/database.types";
 
 // This pulls the exact row definition from your 'inventory' table
 type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];

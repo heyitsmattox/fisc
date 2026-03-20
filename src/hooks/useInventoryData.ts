@@ -20,12 +20,34 @@ export const useInventoryData = () => {
   const totalProfit = inventory.reduce((acc, entry) => acc + (entry.profit ?? 0), 0);
   const totalPaid = inventory.reduce((acc, entry) => acc + (entry.total_cost ?? 0), 0);
 
-  // Return everything for UI
+  const numberOfSales = inventory.length + 1;
+  const profit = totalProfit - totalPaid;
+  const roi = totalPaid > 0 ? (profit / totalPaid) * 100 : 0;
+
+  //firstEntryDate === our first ever entry date. i.e if our first item added was march 1st, 2026. That would be our value)
+  const firstEntryDate = inventory.length > 0 && inventory[0].purchase_date ? new Date(inventory[0].purchase_date) : null;
+  const today = new Date();
+
+  //calculate difference in days
+const diffInTime = today.getTime() - (firstEntryDate ? firstEntryDate.getTime() : today.getTime());
+const diffInDays = Math.ceil(diffInTime / (1000 * 3600 * 24));
+
+//ensure we don't divide by zero if the account is brand new
+const daysInYear = 365;
+const timeMultiplier = diffInDays > 0 ? (daysInYear / diffInDays) : 1;
+
+const projectedAnnualROI = (roi * timeMultiplier).toFixed(2);
+
+  // Return everything for U/
   return {
     ...query,
     inventory,
     totalProfit,
     totalPaid,
+    numberOfSales,
+    profit,
+    roi,
+    projectedAnnualROI,
   };
 };
 // !!! notes !!!
