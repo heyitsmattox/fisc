@@ -7,3 +7,18 @@
     @apply bg-[#1E2329] text-zinc-50;
   }
 }
+
+/* Suppress focus outline on Recharts elements for all interactions */
+.recharts-wrapper *:focus {
+  outline: none !important;
+}
+
+/* Optional: use focus-visible to keep outlines for keyboard navigation (accessibility best practice) */
+.recharts-wrapper *:focus-visible {
+  outline: revert !important;
+}
+
+/* This handles the blue 'tap highlight' on mobile/tablets */
+svg {
+  -webkit-tap-highlight-color: transparent;
+}

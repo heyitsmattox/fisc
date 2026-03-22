@@ -14,8 +14,15 @@ export const useInventoryData = () => {
     },
   });
 
+//loop through each entry and store each profit value for each entry
+// loop 
 
   const inventory = query.data || [];
+
+const individualProfits = inventory.map(entry => entry.profit ?? 0);  
+const individualCosts = inventory.map(entry => entry.total_cost ?? 0);  
+
+const productName = inventory.map(entry => entry.product_name ?? "Unknown Product");
 
   const totalProfit = inventory.reduce((acc, entry) => acc + (entry.profit ?? 0), 0);
   const totalPaid = inventory.reduce((acc, entry) => acc + (entry.total_cost ?? 0), 0);
@@ -48,6 +55,10 @@ const projectedAnnualROI = (roi * timeMultiplier).toFixed(2);
     profit,
     roi,
     projectedAnnualROI,
+    individualProfits,
+    individualCosts,
+    purchase_date: firstEntryDate ? firstEntryDate.toISOString() : null,
+    productName
   };
 };
 // !!! notes !!!

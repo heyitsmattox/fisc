@@ -3,6 +3,7 @@ import { PerformanceCard } from "./cards/PerformanceCard";
 import { useInventoryData } from "../../hooks/useInventoryData";
 import { MetricCard } from "./cards/MetricCard";
 import { RoiCard } from "./cards/RoiCard";
+import ProfitAndLostChart from "./charts/ProfitAndLostChart";
 
 export const Dashboard = () => {
   const {
@@ -69,6 +70,9 @@ return (
           </div>
         </div>
       </div>
+      <ProfitAndLostChart 
+        isAnimationActive={true}
+      />
     </>
   );
 };
