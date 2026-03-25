@@ -19,6 +19,7 @@ export const useInventoryData = () => {
 
   const inventory = query.data || [];
 
+
 const individualProfits = inventory.map(entry => entry.profit ?? 0);  
 const individualCosts = inventory.map(entry => entry.total_cost ?? 0);  
 
@@ -58,7 +59,7 @@ const projectedAnnualROI = (roi * timeMultiplier).toFixed(2);
     individualProfits,
     individualCosts,
     purchase_date: firstEntryDate ? firstEntryDate.toISOString() : null,
-    productName
+    productName,
   };
 };
 // !!! notes !!!
