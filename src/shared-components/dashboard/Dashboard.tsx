@@ -15,6 +15,7 @@ export const Dashboard = () => {
     isLoading,
     isError,
     projectedAnnualROI,
+    dailyAverageProfit,
   } = useInventoryData();
 
   if (isLoading) return <div className="p-8 text-white">Loading Stats...</div>;
@@ -44,10 +45,10 @@ return (
             backgroundVariant="default"
           />
           <MetricCard
-            metricString={"Profit"}
-            metric={profit}
+            metricString={"Daily Avg Profit"}
+            metric={dailyAverageProfit}
             backgroundVariant="default"
-            textColorVariant="emerald"
+            textColorVariant="default"
           />
         </div> 
 

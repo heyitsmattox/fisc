@@ -37,9 +37,9 @@ const ProfitAndLostChart = ({ isAnimationActive = true }) => {
   .sort((a, b) => new Date(a.name).getTime() - new Date(b.name).getTime());
 
   const dummyData = [
-    { name: "January 1", profit: 0 },
+    { name: "Jan 1", profit: 0 },
     { name: "May 2", profit: 0 },
-    { name: "December 3", profit: 0 },
+    { name: "Dec 3", profit: 0 },
   ]
 
   // Determine which dataset to use before rendering
