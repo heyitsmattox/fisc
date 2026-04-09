@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
 
 interface AuthFormProps {
-  // mode: 'login' | 'signup';
-  // setMode: (mode: 'login' | 'signup') => void;
   isLoading: boolean;
 }
 
+//anything in our interface needs to be passed as a prop in our
 export const AuthForm: React.FC<AuthFormProps> = ({isLoading }) => {
 
   const [email, setEmail] = useState<string>('');
@@ -106,9 +106,11 @@ export const AuthForm: React.FC<AuthFormProps> = ({isLoading }) => {
             {mode === 'login' ? "Don't have an account?" : "Already have an account?"}{' '}
             <button 
               type="button" 
+            // check current mode. If on login screen switch to the mode of signup. If on signup screen switch to the mode of login
               onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
               className="text-emerald-500 hover:underline font-bold"
             >
+                 {/* if current mode is login show the text sign up. otherwise show the text login */}
               {mode === 'login' ? 'Sign Up' : 'Log In'}
             </button>
           </p>

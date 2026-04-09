@@ -17,6 +17,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           {/* Added the prop of mode. See AuthForm for details. */}
           <Route path="/login" element={<AuthForm mode="login"/>} />
+          <Route path="/signup" element={<AuthForm mode="signup"/>} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/portfolio" element={<Portfolio />} />
