@@ -5,13 +5,55 @@ interface AuthFormProps {
   isLoading: boolean;
 }
 
+type AuthMode = 'login' | 'signup';
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+
 //anything in our interface needs to be passed as a prop in our
-export const AuthForm: React.FC<AuthFormProps> = ({isLoading }) => {
+export const  AuthForm: React.FC<AuthFormProps> = ({isLoading }) => {
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [storeName, setStoreName] = useState<string>('');
-  const [mode, setMode] = useState<string>('login' | 'signup')
+  const [mode, setMode] = useState<AuthMode>('login');
+  const [avatarUrl, setAvatarUrl] = useState<string>(''); // Example of extra user metadata
+  const [fullName, setFullName ] = useState<string>('');
+
+  // need to look into 422 error that is in the console when trying to sign up. It is a validation error that is being thrown by supabase. 
+  // It is likely that the email or password is not being passed correctly. 
+  // Need to check the values of email and password before making the request. 
+  // Also need to check the structure of the request body to ensure it matches what supabase expects.
+
+const handleAuth = async (e: React.FormEvent) => {
+  e.preventDefault();   
+  const { data, error } = await supabase.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+        data: {
+          full_name: fullName, // Example of extra user metadata
+          avatar_url: avatarUrl, // Example of extra user metadata
+          store_name: storeName, // Extra data goes inside 'options.data'
+        }
+      }
+  })
+
+const authForm = document.getElementById('auth-form') as HTMLFormElement;
+authForm.reset(); // This will clear all input fields in the form after submission
+
+   if (error) {
+    console.error('Error during sign up:', error.message);
+  } else {
+    console.log('Sign up successful:', data);
+  }
+}
+
+
+  
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center  bg-[#1a1d20] text-zinc-50 p-6">
@@ -55,13 +97,16 @@ export const AuthForm: React.FC<AuthFormProps> = ({isLoading }) => {
         </div>
 
         {/* Form Body */}
-        <form className="p-8 space-y-5">
+        <form  
+        id="auth-form"
+        className="p-8 space-y-5">
           <div className="space-y-1">
             <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider ml-1">Email Address</label>
             <input 
               type="email"
               placeholder="user@example.com" 
               className="w-full bg-[#0f1113] border border-white/10 p-4 text-sm text-white rounded-xl outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-zinc-700"
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -71,6 +116,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({isLoading }) => {
               type="password"
               placeholder="••••••••" 
               className="w-full bg-[#0f1113] border border-white/10 p-4 text-sm text-white rounded-xl outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-zinc-700"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
@@ -83,6 +129,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({isLoading }) => {
                   type="text"
                   placeholder="My TCG Shop" 
                   className="w-full bg-[#0f1113] border border-white/10 p-4 text-sm text-white rounded-xl outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-zinc-700"
+                  onChange={(e) => setStoreName(e.target.value)}
                 />
               </div>
             </div>
@@ -98,6 +145,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({isLoading }) => {
             type="submit"
             disabled={isLoading}
             className="w-full bg-emerald-500 hover:bg-emerald-400 disabled:bg-zinc-700 text-[#0f1113] font-bold py-4 rounded-xl mt-4 transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] active:scale-[0.98] disabled:cursor-not-allowed"
+            onClick={handleAuth}
           >
             {isLoading ? 'Processing...' : mode === 'login' ? 'Sign In' : 'Create Account'}
           </button>
