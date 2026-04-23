@@ -5,21 +5,31 @@ import { supabase } from "../../lib/supabaseClient";
 const UserSessionBtn = () => {
   const { user } = useAuth();
 
+  // Base styles 
+  const baseStyles = "flex items-center shrink-0 font-bold  tracking-widest text-[14px] transition-all duration-200 hover:text-emerald-400";
+
   return (
-    <div>
+    <div className="py-2">
       {user ? (
         <button
-          className={`${user ? `text-white hover:text-emerald-400 transition-colors rounded-md font-bold  flex items-center shrink-0 ` : ` hover:text-emerald-400 transition-colors text-white rounded-md font-bold  flex items-center shrink-0`}`}
+          className={`${baseStyles} text-zinc-400`}
           onClick={() => supabase.auth.signOut()}
         >
-          <i className="pr-2 fa-solid fa-arrow-right-to-bracket"></i>
-          Sign out
+          {/* Icon from your OSRS/Dashboard aesthetic */}
+          <i className="fa-solid fa-arrow-right-from-bracket pr-3 text-emerald-500"></i>
+          Sign Out
         </button>
       ) : (
-        <Link to="/login">Sign in</Link>
+        <Link 
+          to="/login" 
+          className={`${baseStyles} text-white`}
+        >
+          <i className="fa-solid fa-user pr-3 text-emerald-500"></i>
+          Sign In
+        </Link>
       )}
     </div>
   );
 };
 
-export default UserSessionBtn
+export default UserSessionBtn;
