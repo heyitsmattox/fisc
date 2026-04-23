@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router";
+import UserSessionBtn from "../ui/UserSessionBtn";
+
+
+
 
 interface NavbarProps {
   fiscImageLogo?: string;
@@ -14,6 +18,7 @@ const Navbar = ({
   showNavbarMenuIcon = true,
 }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
 
   const handleMenuOpen = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -126,19 +131,26 @@ return (
             </div>
 
             {/* Side Menu Navigation */}
-            <nav className="p-8">
+            <nav className="p-8 " >
               <ul className="flex flex-col gap-8 text-xl font-semibold tracking-tight text-zinc-300">
                 <li className="hover:text-emerald-400 transition-colors">
+                  <i className="pr-2 fa-solid fa-chart-line"></i>
                   <Link to="/dashboard" onClick={handleMenuOpen}>Dashboard</Link>
                 </li>
                 <li className="hover:text-emerald-400 transition-colors">
+                  <i className="pr-2 fa-regular fa-clipboard"></i>
                   <Link to="/inventory" onClick={handleMenuOpen}>Inventory</Link>
                 </li>
                 <li className="hover:text-emerald-400 transition-colors">
+                  <i className="pr-2 fa-regular fa-user"></i>
                   <Link to="/portfolio" onClick={handleMenuOpen}>Portfolio</Link>
                 </li>
                 <li className="hover:text-emerald-400 transition-colors">
+                  <i className="pr-2 fa-solid fa-gear"></i>
                   <Link to="/settings" onClick={handleMenuOpen}>Settings</Link>
+                </li>
+                 <li >
+                  <UserSessionBtn />
                 </li>
               </ul>
             </nav>
