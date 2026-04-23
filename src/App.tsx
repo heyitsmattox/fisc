@@ -7,6 +7,7 @@ import { AuthForm } from "./shared-components/auth/AuthForm";
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAuth } from "./hooks/useAuth";
+import Reports from "./pages/Reports";
 
 const ProtectedRoute = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
@@ -28,6 +29,7 @@ const App = () => {
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/reports" element={<Reports />} />
           </Route>
         </Routes>
       </QueryClientProvider>
