@@ -25,6 +25,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   const [password, setPassword] = useState<string>("");
   const [storeName, setStoreName] = useState<string>("");
   const [formMode, setFormMode] = useState<AuthMode>(initialMode);
+  // placeholder right now, will use in the future
   const [avatarUrl, setAvatarUrl] = useState<string>(""); // Example of extra user metadata
   const [fullName, setFullName] = useState<string>("");
 
@@ -60,7 +61,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       data = response.data;
       error = response.error;
     }
-
+    //clears the form after submission
     const authForm = document.getElementById(
       "auth-form",
     ) as HTMLFormElement | null;
