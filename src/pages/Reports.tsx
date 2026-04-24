@@ -1,12 +1,12 @@
 import Navbar
  from "../shared-components/layout/Navbar";
-const Settings = () => {
+const Reports = () => {
   return (
     <div>
       <Navbar showFiscImageLogo={true} showNavbarMenuIcon={true} />
-      <h1>Settings component</h1>
+      <h1>Reports component</h1>
     </div>
   );
 };
 
-export default Settings;
+export default Reports;

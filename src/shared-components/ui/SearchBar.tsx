@@ -41,14 +41,14 @@ const SearchBar = ({
         />
       </div>
 
-      <button
+      {/* <button
         type="button"
         onClick={onButtonClick}
         className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-1.5 rounded-md font-bold transition-colors flex items-center shrink-0"
       >
         <i className="fa-solid fa-plus pr-2 text-sm"></i>
         {buttonText}
-      </button>
+      </button> */}
     </form>
   );
 };
