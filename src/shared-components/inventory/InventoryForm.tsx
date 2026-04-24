@@ -1,4 +1,4 @@
-import { useState, type JSX } from "react";
+import { use, useEffect, useState, type JSX } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import type { Database } from "../../lib/database.types";
 
@@ -15,7 +15,6 @@ interface FieldConfig {
 
 interface DynamicInventoryFormProps {
   config: FieldConfig[];
-
 }
 
 //blueprint where every every line in our array represents our a single input
@@ -94,17 +93,30 @@ export function InventoryForm({
   });
   // array for holding our data which are objects for when the user clicks on add entry
   const [addInventory, setAddInventory] = useState<InventoryEntry[]>([]);
+  const [inventoryData, setInventoryData] = useState<InventoryEntry[]>([]);
+  const [loading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (addInventory) {
+      const fetchInventory = async () => {
+        setIsLoading(true);
+        const { data, error } = await supabase.from("inventory").select();
+        if (error) {
+          console.error("Error fetching inventory:", error.message);
+        } else {
+          setInventoryData(data || []);
+        }
+        setIsLoading(false);
+      };
+      fetchInventory();
+    }
+  }, [addInventory]);
 
   const handleAddEntryBtn = async (
     e: React.FormEvent,
     initialState: Record<string, string | number> = {},
   ) => {
     e.preventDefault(); // Stops the page from refreshing
-
-    // Create a "Snapshot" of the current form data with a unique ID
-    // const newEntry: InventoryEntry = {
-    //   ...formData, // Copies all the fields from your form
-    // } as InventoryEntry; // Tells TS this matches our interface
 
     const { data, error } = await supabase
       .from("inventory")
@@ -230,72 +242,73 @@ export function InventoryForm({
         </button>
       </form>
 
-      {/* Table for our newly added entries */}
+      {/* Conditional rendering for inventory data */}
       <div className="w-full overflow-hidden rounded-xl border border-slate-700/50 bg-[#1E2329] shadow-2xl">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[1000px] text-left border-collapse table-auto">
-            <thead>
-              <tr className="border-b border-slate-700 bg-slate-800/50">
-                {/* field === our current object */}
-                {inventoryFields.map((field) => (
-                  <th
-                    key={field.formName}
-                    className="px-6 py-4 text-[10px] uppercase tracking-wider text-slate-500 font-bold"
-                  >
-                    {field.formLabel}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-700/50">
-              {addInventory.map((item) => (
-                <tr
-                  key={item.id}
-                  className="hover:bg-white/5 transition-colors"
-                >
-                  {/* 1. We iterate through the fields to create cells */}
-                  {inventoryFields.map((field) => {
-                    const rawValue = item[field.formName];
-
-                    // 2. Determine how to display the value
-                    let displayValue = rawValue ?? "-";
-
-                    // 3. Apply your currency logic for numbers
-                    if (
-                      field.type === "number" &&
-                      field.formName !== "quantity"
-                    ) {
-                      displayValue = `$${rawValue ?? 0}`;
-                    }
-                    return (
-                      <td
-                        key={field.formName}
-                        className={`px-6 py-4 text-sm whitespace-nowrap 
-              ${
-                field.formName === "profit"
-                  ? Number(rawValue) >= 0
-                    ? "text-emerald-400 font-bold"
-                    : "text-rose-400 font-bold"
-                  : "text-zinc-300"
-              }`}
-                      >
-                        {displayValue}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {addInventory.length === 0 && (
+        {loading ? (
+          <div className="p-12 text-center text-slate-500 italic bg-slate-900/10">
+            Loading inventory...
+          </div>
+        ) : inventoryData.length === 0 ? (
           <div className="p-12 text-center text-slate-500 italic bg-slate-900/10">
             No entries found. Fill out the form above to get started.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[1000px] text-left border-collapse table-auto">
+              <thead>
+                <tr className="border-b border-slate-700 bg-slate-800/50">
+                {/* mapping through our inventory fields to create table headers. e.g Product Name, Cost Per, etc. */}
+                  {inventoryFields.map((field) => (
+                    <th
+                      key={field.formName}
+                      className="px-6 py-4 text-[10px] uppercase tracking-wider text-slate-500 font-bold"
+                    >
+                      {field.formLabel}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-700/50">
+                {inventoryData.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="hover:bg-white/5 transition-colors"
+                  >
+                    {/* mapping through our actual data */}
+                    {inventoryFields.map((field) => {
+                      const rawValue = item[field.formName];
+                      let displayValue = rawValue ?? "-";
+                      if (
+                        field.type === "number" &&
+                        field.formName !== "quantity"
+                      ) {
+                        displayValue = `$${rawValue ?? 0}`;
+                      }
+                      return (
+                        <td
+                          key={field.formName}
+                          className={`px-6 py-4 text-sm whitespace-nowrap 
+                ${
+                  field.formName === "profit"
+                    ? Number(rawValue) >= 0
+                      ? "text-emerald-400 font-bold"
+                      : "text-rose-400 font-bold"
+                    : "text-zinc-300"
+                }`}
+                        >
+                          {displayValue}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
     </div>
   );
 }
+
 export default InventoryForm;
