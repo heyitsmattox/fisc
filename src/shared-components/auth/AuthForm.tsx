@@ -69,12 +69,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
 
     if (error) {
       console.error("Auth error:", error.message);
-    } else {
-      console.log(
-        `${formMode === "signup" ? "Sign up" : "Login"} successful:`,
-        data,
-      );
-    }
+    } 
   };
 
   const ProtectedRoute = ({
@@ -89,7 +84,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   };
 
   const { data } = supabase.auth.onAuthStateChange((event, session) => {
-    console.log(event, session);
     if (event === "SIGNED_IN") {
       // handle signed in session
       navigate("/dashboard"); // Redirect to dashboard after successful login
