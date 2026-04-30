@@ -374,7 +374,7 @@ export function InventoryForm({
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-700/50">
+              <tbody className="divide-y divide-slate-700/50 ">
                 {inventoryData.map((singleFormEntry) => (
                   <tr
                     key={singleFormEntry.id}
@@ -416,18 +416,22 @@ export function InventoryForm({
                             ${isReadOnly ? "cursor-default" : "cursor-pointer hover:bg-sky-900/20"}
                             ${
                               field.formName === "profit"
+                             
                                 ? Number(rawValue) >= 0
-                                  ? "text-emerald-400 font-bold"
+                                  ? "text-emerald-400 font-bold "
+                                 
                                   : "text-rose-400 font-bold"
                                 : "text-zinc-300"
                             }`}
                         >
+              
                           {/*
                             CONDITIONAL RENDERING — the heart of inline editing.
                             If isEditing is true, show an <input>.
                             If isEditing is false, show the plain display text.
                             React swaps these in and out every time state changes.
                           */}
+                          
                           {isEditing ? (
                             <input
                               // autoFocus puts the cursor inside the input the moment
@@ -451,7 +455,15 @@ export function InventoryForm({
                         </td>
                       );
                     })}
+                    <td className="p-2 text-rose-300 opacity-0 hover:opacity-100">
+                      <button>
+                        <i className="fa-solid fa-delete-left"></i>
+                      </button>
+                    </td>
+                        
+                    
                   </tr>
+                  
                 ))}
               </tbody>
             </table>
