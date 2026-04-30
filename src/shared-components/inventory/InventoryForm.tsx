@@ -1,4 +1,4 @@
-import { use, useEffect, useState, type JSX } from "react";
+import { useEffect, useState, type JSX } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import type { Database } from "../../lib/database.types";
 
@@ -70,6 +70,9 @@ export const inventoryFields: FieldConfig[] = [
   },
 ];
 
+// These fields are calculated automatically — the user should never edit them directly
+const READ_ONLY_FIELDS = ["total_cost", "total_price_sold", "profit"];
+
 export function InventoryForm({
   //config is our "smart" default in case we reuse this component. By leaving the config prop undefined or not passed, it'll plug in our data from FieldConfig above. If we need different fields we can pass config={otherFieldName}
   config = inventoryFields,
@@ -95,6 +98,18 @@ export function InventoryForm({
   const [addInventory, setAddInventory] = useState<InventoryEntry[]>([]);
   const [inventoryData, setInventoryData] = useState<InventoryEntry[]>([]);
   const [loading, setIsLoading] = useState(false);
+
+  // --- Inline editing state ---
+  // editingCell tracks WHICH cell is active: we store the row's id and the field name.
+  // When this is null, no cell is being edited.
+  const [editingCell, setEditingCell] = useState<{
+    id: string;
+    field: string;
+  } | null>(null);
+
+  // editingValue holds what the user is currently typing — it's a draft that
+  // hasn't been saved yet. We only write to the database when they confirm.
+  const [editingValue, setEditingValue] = useState<string>("");
 
   useEffect(() => {
     if (addInventory) {
@@ -166,6 +181,97 @@ export function InventoryForm({
       };
     });
   };
+
+  // --- Inline editing handlers ---
+
+  // Called when the user double-clicks a cell. We record which cell they clicked
+  // and seed editingValue with whatever is currently in that cell.
+  const handleStartEdit = (
+    entryId: string,
+    fieldName: string,
+    currentValue: string | number | null,
+  ) => {
+    setEditingCell({ id: entryId, field: fieldName });
+    setEditingValue(String(currentValue ?? ""));
+  };
+
+  // Called when the user confirms their edit (Enter key or clicking away).
+  // We build the updated row, recalculate derived fields, save to Supabase,
+  // then update our local state so the UI reflects the change immediately.
+  const handleSaveEdit = async (entry: InventoryEntry, field: FieldConfig) => {
+    if (!editingCell) return;
+
+    // Convert the typed string into the right type for this field
+    const parsedValue =
+      field.type === "number" // checking if field is a number
+        ? field.formName === "quantity" // check if it's specifically the quantity field
+          ? parseInt(editingValue) || 0 // if so, parse as a whole number e.g 5
+          : parseFloat(editingValue) || 0 // otherwise, parse like a decimal number. e.g $12.99
+        : editingValue; // else just use the data type of string
+
+    // Build a copy of the row with the new value applied. e.g parsedValue 
+    const updatedEntry: InventoryEntry = {
+      ...entry,
+      [field.formName]: parsedValue,
+    }; 
+
+    // If the user edited a field that feeds into our calculations,
+    // recompute the derived fields the same way handleChange does.
+    // *** FUTURE EDITS *** - we could DRY this up by extracting the calculation logic into a separate function since it's used in multiple places now. For now, we'll just keep it here.
+    if (
+      ["cost_per_item", "quantity", "sold_price", "shipping_cost"].includes(
+        field.formName,
+      )
+    ) {
+      const costPer =
+        field.formName === "cost_per_item"
+          ? (parseFloat(editingValue) || 0)
+          : (parseFloat(String(entry.cost_per_item)) || 0);
+      const qty =
+        field.formName === "quantity"
+          ? (parseInt(editingValue) || 0)
+          : (parseInt(String(entry.quantity)) || 0);
+      const listPrice =
+        field.formName === "sold_price"
+          ? (parseFloat(editingValue) || 0)
+          : (parseFloat(String(entry.sold_price)) || 0);
+      const shipping =
+        field.formName === "shipping_cost"
+          ? (parseFloat(editingValue) || 0)
+          : (parseFloat(String(entry.shipping_cost)) || 0);
+
+      updatedEntry.total_cost = Number((costPer * qty).toFixed(2));
+      updatedEntry.total_price_sold = Number((listPrice * qty).toFixed(2));
+      updatedEntry.profit = Number(
+        (updatedEntry.total_price_sold - updatedEntry.total_cost - shipping).toFixed(2),
+      );
+    }
+
+    // Persist to the database
+    const { error } = await supabase
+      .from("inventory")
+      .update(updatedEntry)
+      .eq("id", entry.id);
+
+    if (error) {
+      console.error("Failed to update entry:", error.message);
+      setEditingCell(null);
+      return;
+    }
+
+    // update our local list so the user sees the change right away
+    setInventoryData((prev) =>
+      prev.map((item) => (item.id === entry.id ? updatedEntry : item)),
+    );
+
+    setEditingCell(null);
+  };
+
+  // Called when the user presses Escape — discards the draft and closes the input.
+  const handleCancelEdit = () => {
+    setEditingCell(null);
+  };
+
   // ---- UI  ----
   return (
     <div className="w-full min-h-screen bg-[#0F1216] p-8 text-zinc-50 flex flex-col gap-10">
@@ -220,7 +326,7 @@ export function InventoryForm({
 
     /* Added some alignment on the product name field to give it more focus to the user */
     ${field.formName === "product_name" ? "text-center" : "text-left"}
-    
+
     /* ReadOnly Styling: Now also dims Total Price Sold */
     ${
       ["totalCost", "totalPriceSold", "profit"].includes(field.formName)
@@ -269,34 +375,79 @@ export function InventoryForm({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700/50">
-                {inventoryData.map((item) => (
+                {inventoryData.map((singleFormEntry) => (
                   <tr
-                    key={item.id}
+                    key={singleFormEntry.id}
                     className="hover:bg-white/5 transition-colors"
                   >
-                    {/* mapping through our actual data */}
                     {inventoryFields.map((field) => {
-                      const rawValue = item[field.formName];
-                      let displayValue = rawValue ?? "-";
-                      if (
-                        field.type === "number" &&
-                        field.formName !== "quantity"
-                      ) {
+                      const rawValue = singleFormEntry[field.formName];
+                      let displayValue: string | number = rawValue ?? "-";
+
+                      if (field.type === "number" && field.formName !== "quantity") {
                         displayValue = `$${rawValue ?? 0}`;
                       }
+
+                      // Is THIS specific cell the one currently being edited?
+                      // We check both the row id AND the field name so only one cell
+                      // is active at a time.
+                      const isEditing =
+                        editingCell?.id === String(singleFormEntry.id) && // should result in true since the cell would belong to the row we are in.
+                        editingCell?.field === field.formName;
+
+                      const isReadOnly = READ_ONLY_FIELDS.includes(field.formName);
+
                       return (
                         <td
                           key={field.formName}
-                          className={`px-6 py-4 text-sm whitespace-nowrap 
-                ${
-                  field.formName === "profit"
-                    ? Number(rawValue) >= 0
-                      ? "text-emerald-400 font-bold"
-                      : "text-rose-400 font-bold"
-                    : "text-zinc-300"
-                }`}
+                          // onDoubleClick triggers inline editing.
+                          // We guard against read-only fields so calculated columns
+                          // can never be edited directly.
+                          onDoubleClick={() => {
+                            if (!isReadOnly) {
+                              handleStartEdit(
+                                String(singleFormEntry.id),
+                                field.formName,
+                                rawValue,
+                              );
+                            }
+                          }}
+                          className={`px-6 py-4 text-sm whitespace-nowrap transition-colors
+                            ${isReadOnly ? "cursor-default" : "cursor-pointer hover:bg-sky-900/20"}
+                            ${
+                              field.formName === "profit"
+                                ? Number(rawValue) >= 0
+                                  ? "text-emerald-400 font-bold"
+                                  : "text-rose-400 font-bold"
+                                : "text-zinc-300"
+                            }`}
                         >
-                          {displayValue}
+                          {/*
+                            CONDITIONAL RENDERING — the heart of inline editing.
+                            If isEditing is true, show an <input>.
+                            If isEditing is false, show the plain display text.
+                            React swaps these in and out every time state changes.
+                          */}
+                          {isEditing ? (
+                            <input
+                              // autoFocus puts the cursor inside the input the moment
+                              // it appears — no extra click needed.
+                              autoFocus
+                              type={field.type === "number" ? "text" : field.type}
+                              value={editingValue}
+                              onChange={(e) => setEditingValue(e.target.value)}
+                              // onBlur fires when the user clicks somewhere else.
+                              // We treat that as "done" and save the edit.
+                              onBlur={() => handleSaveEdit(singleFormEntry, field)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") handleSaveEdit(singleFormEntry, field);
+                                if (e.key === "Escape") handleCancelEdit();
+                              }}
+                              className="bg-transparent border-b border-sky-500 outline-none text-sm w-full min-w-[60px]"
+                            />
+                          ) : (
+                            displayValue
+                          )}
                         </td>
                       );
                     })}
