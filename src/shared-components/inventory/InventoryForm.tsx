@@ -198,7 +198,9 @@ export function InventoryForm({
   // Called when the user confirms their edit (Enter key or clicking away).
   // We build the updated row, recalculate derived fields, save to Supabase,
   // then update our local state so the UI reflects the change immediately.
+
   const handleSaveEdit = async (entry: InventoryEntry, field: FieldConfig) => {
+    console.log('entry in handleSaveEdit', entry)
     if (!editingCell) return;
 
     // Convert the typed string into the right type for this field
@@ -271,6 +273,24 @@ export function InventoryForm({
   const handleCancelEdit = () => {
     setEditingCell(null);
   };
+
+
+
+  const handleDeleteEntry = async (singleFormEntry: InventoryEntry) => {   
+      const {error} = await supabase
+      .from('inventory')
+      .delete()
+      .eq('id', singleFormEntry.id)
+      if(error) {
+        console.error("Failed to delete from database:", error.message);
+       return;
+      } else {
+        setInventoryData((prev) => prev.filter((item) => item.id !== singleFormEntry.id))
+      }
+}
+
+
+
 
   // ---- UI  ----
   return (
@@ -380,6 +400,7 @@ export function InventoryForm({
                     key={singleFormEntry.id}
                     className="hover:bg-white/5 transition-colors"
                   >
+                    
                     {inventoryFields.map((field) => {
                       const rawValue = singleFormEntry[field.formName];
                       let displayValue: string | number = rawValue ?? "-";
@@ -456,14 +477,13 @@ export function InventoryForm({
                       );
                     })}
                     <td className="p-2 text-rose-300 opacity-0 hover:opacity-100">
-                      <button>
+                      <button
+                      onClick={() => handleDeleteEntry(singleFormEntry)}
+                      >
                         <i className="fa-solid fa-delete-left"></i>
                       </button>
                     </td>
-                        
-                    
                   </tr>
-                  
                 ))}
               </tbody>
             </table>
@@ -475,3 +495,4 @@ export function InventoryForm({
 }
 
 export default InventoryForm;
+
