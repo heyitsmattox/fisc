@@ -201,7 +201,6 @@ export function InventoryForm({
   // then update our local state so the UI reflects the change immediately.
 
   const handleSaveEdit = async (entry: InventoryEntry, field: FieldConfig) => {
-    console.log('entry in handleSaveEdit', entry)
     if (!editingCell) return;
 
     // Convert the typed string into the right type for this field
