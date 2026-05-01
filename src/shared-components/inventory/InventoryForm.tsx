@@ -1,6 +1,7 @@
 import { useEffect, useState, type JSX } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import type { Database } from "../../lib/database.types";
+import deleteEntry from "../../utils.ts/inventory/deleteEntry";
 
 // This pulls the exact row definition from your 'inventory' table
 type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
@@ -198,6 +199,7 @@ export function InventoryForm({
   // Called when the user confirms their edit (Enter key or clicking away).
   // We build the updated row, recalculate derived fields, save to Supabase,
   // then update our local state so the UI reflects the change immediately.
+
   const handleSaveEdit = async (entry: InventoryEntry, field: FieldConfig) => {
     if (!editingCell) return;
 
@@ -271,6 +273,7 @@ export function InventoryForm({
   const handleCancelEdit = () => {
     setEditingCell(null);
   };
+
 
   // ---- UI  ----
   return (
@@ -374,12 +377,13 @@ export function InventoryForm({
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-700/50">
+              <tbody className="divide-y divide-slate-700/50 ">
                 {inventoryData.map((singleFormEntry) => (
                   <tr
                     key={singleFormEntry.id}
                     className="hover:bg-white/5 transition-colors"
                   >
+                    
                     {inventoryFields.map((field) => {
                       const rawValue = singleFormEntry[field.formName];
                       let displayValue: string | number = rawValue ?? "-";
@@ -416,18 +420,22 @@ export function InventoryForm({
                             ${isReadOnly ? "cursor-default" : "cursor-pointer hover:bg-sky-900/20"}
                             ${
                               field.formName === "profit"
+                             
                                 ? Number(rawValue) >= 0
-                                  ? "text-emerald-400 font-bold"
+                                  ? "text-emerald-400 font-bold "
+                                 
                                   : "text-rose-400 font-bold"
                                 : "text-zinc-300"
                             }`}
                         >
+              
                           {/*
                             CONDITIONAL RENDERING — the heart of inline editing.
                             If isEditing is true, show an <input>.
                             If isEditing is false, show the plain display text.
                             React swaps these in and out every time state changes.
                           */}
+                          
                           {isEditing ? (
                             <input
                               // autoFocus puts the cursor inside the input the moment
@@ -451,6 +459,13 @@ export function InventoryForm({
                         </td>
                       );
                     })}
+                    <td className="p-2 text-rose-300 opacity-0 hover:opacity-100">
+                      <button
+                      onClick={() => deleteEntry(singleFormEntry, setInventoryData)}
+                      >
+                        <i className="fa-solid fa-delete-left"></i>
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -463,3 +478,4 @@ export function InventoryForm({
 }
 
 export default InventoryForm;
+
