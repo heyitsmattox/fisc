@@ -1,6 +1,7 @@
 import { useEffect, useState, type JSX } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import type { Database } from "../../lib/database.types";
+import deleteEntry from "../../utils.ts/deleteEntry";
 
 // This pulls the exact row definition from your 'inventory' table
 type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
@@ -275,23 +276,6 @@ export function InventoryForm({
   };
 
 
-
-  const handleDeleteEntry = async (singleFormEntry: InventoryEntry) => {   
-      const {error} = await supabase
-      .from('inventory')
-      .delete()
-      .eq('id', singleFormEntry.id)
-      if(error) {
-        console.error("Failed to delete from database:", error.message);
-       return;
-      } else {
-        setInventoryData((prev) => prev.filter((item) => item.id !== singleFormEntry.id))
-      }
-}
-
-
-
-
   // ---- UI  ----
   return (
     <div className="w-full min-h-screen bg-[#0F1216] p-8 text-zinc-50 flex flex-col gap-10">
@@ -478,7 +462,7 @@ export function InventoryForm({
                     })}
                     <td className="p-2 text-rose-300 opacity-0 hover:opacity-100">
                       <button
-                      onClick={() => handleDeleteEntry(singleFormEntry)}
+                      onClick={() => deleteEntry(singleFormEntry, setInventoryData)}
                       >
                         <i className="fa-solid fa-delete-left"></i>
                       </button>
