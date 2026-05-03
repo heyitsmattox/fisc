@@ -6,7 +6,7 @@ import deleteEntry from "../../utils.ts/inventory/deleteEntry";
 // This pulls the exact row definition from your 'inventory' table
 type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
 
-interface FieldConfig {
+export interface FieldConfig {
   formName: keyof InventoryEntry;
   formLabel: string; // The text the user sees (e.g., "Cost Per Item")
   type: "text" | "number" | "date";
