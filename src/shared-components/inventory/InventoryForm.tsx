@@ -2,6 +2,8 @@ import { useEffect, useState, type JSX } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import type { Database } from "../../lib/database.types";
 import deleteEntry from "../../utils.ts/inventory/deleteEntry";
+import { useInventoryForm } from "../../hooks/useInventoryForm";
+import addEntry from "../../utils.ts/inventory/addEntry";
 
 // This pulls the exact row definition from your 'inventory' table
 type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
@@ -71,34 +73,22 @@ export const inventoryFields: FieldConfig[] = [
   },
 ];
 
-// These fields are calculated automatically — the user should never edit them directly
 const READ_ONLY_FIELDS = ["total_cost", "total_price_sold", "profit"];
-
 export function InventoryForm({
   //config is our "smart" default in case we reuse this component. By leaving the config prop undefined or not passed, it'll plug in our data from FieldConfig above. If we need different fields we can pass config={otherFieldName}
   config = inventoryFields,
   //Telling typescript to only accept an object that has exactly what is defined in the DynamicInventoryFormProps interface.
 }: DynamicInventoryFormProps): JSX.Element {
-  const [formData, setFormData] = useState(() => {
-    //using a callback function inside useState to pre-fill our data.
-
-    // Initialize state using the names from our config
-    const initialState: Record<string, string | number> = {};
-
-    //Record is used here b/c we don't know the key value pairs.
-    //Using record allows us to define the "shape" w/o knowing the names.
-    //  A "Record" is a single entry that groups related data points.
-    // In TypeScript, Record<K, V> says: "I want a record where every Key (K) is a certain type and every Value (V) is a certain type."
-
-    config.forEach((f) => (initialState[f.formName] = f.defaultValue ?? ""));
-    return initialState;
-    //looping through our inventoryFields and creates an object that should
-    //populate data like so --> { dateOfPurchase: "", product_name: "", cost_per_item: 0, ... }
-  });
-  // array for holding our data which are objects for when the user clicks on add entry
-  const [addInventory, setAddInventory] = useState<InventoryEntry[]>([]);
-  const [inventoryData, setInventoryData] = useState<InventoryEntry[]>([]);
-  const [loading, setIsLoading] = useState(false);
+  const {
+    formData,
+    setFormData,
+    addInventory,
+    setAddInventory,
+    loading,
+    setIsLoading,
+    inventoryData,
+    setInventoryData,
+  } = useInventoryForm(config);
 
   // --- Inline editing state ---
   // editingCell tracks WHICH cell is active: we store the row's id and the field name.
@@ -126,50 +116,26 @@ export function InventoryForm({
       };
       fetchInventory();
     }
-  }, [addInventory]);
+  }, [addInventory, setInventoryData, setIsLoading]);
 
   const handleAddEntryBtn = async (
     e: React.FormEvent,
     initialState: Record<string, string | number> = {},
   ) => {
-    e.preventDefault(); // Stops the page from refreshing
-
-    const { data, error } = await supabase
-      .from("inventory")
-      .insert([formData])
-      .select();
-
-    if (error) {
-      console.error("Failed to save to database:", error.message);
-      return;
-    }
-    if (data && data.length > 0) {
-      const officialEntry = data[0];
-      setAddInventory((prev) => [...prev, officialEntry]);
-    }
-
-    // clear the form
-    const handleClear = () => {
-      setFormData(initialState);
-    };
-    handleClear();
+    await addEntry(e, formData, setAddInventory);
+    setFormData(initialState);
   };
 
-  //handle all the change logic for every input field
   const handleChange = (name: string, value: string) => {
     setFormData((prev) => {
       // Start with the new value
       const updatedData = { ...prev, [name]: value };
-
-      // Parse values defaulting to 0 for safety in case user leaves blank or adds a weird character
       const costPer = parseFloat(updatedData.cost_per_item as string) || 0;
       const qty = parseInt(updatedData.quantity as string) || 0;
       const listPrice = parseFloat(updatedData.sold_price as string) || 0;
       const shipping = parseFloat(updatedData.shipping_cost as string) || 0;
-
-      // Perform the Chain Calculations
       const calculatedTotalCost = costPer * qty;
-      const calculatedTotalPriceSold = listPrice * qty; // <--- Your new logic
+      const calculatedTotalPriceSold = listPrice * qty;
       const calculatedProfit =
         calculatedTotalPriceSold - calculatedTotalCost - shipping;
 
@@ -182,8 +148,6 @@ export function InventoryForm({
       };
     });
   };
-
-  // --- Inline editing handlers ---
 
   // Called when the user double-clicks a cell. We record which cell they clicked
   // and seed editingValue with whatever is currently in that cell.
@@ -211,11 +175,11 @@ export function InventoryForm({
           : parseFloat(editingValue) || 0 // otherwise, parse like a decimal number. e.g $12.99
         : editingValue; // else just use the data type of string
 
-    // Build a copy of the row with the new value applied. e.g parsedValue 
+    // Build a copy of the row with the new value applied. e.g parsedValue
     const updatedEntry: InventoryEntry = {
       ...entry,
       [field.formName]: parsedValue,
-    }; 
+    };
 
     // If the user edited a field that feeds into our calculations,
     // recompute the derived fields the same way handleChange does.
@@ -227,25 +191,29 @@ export function InventoryForm({
     ) {
       const costPer =
         field.formName === "cost_per_item"
-          ? (parseFloat(editingValue) || 0)
-          : (parseFloat(String(entry.cost_per_item)) || 0);
+          ? parseFloat(editingValue) || 0
+          : parseFloat(String(entry.cost_per_item)) || 0;
       const qty =
         field.formName === "quantity"
-          ? (parseInt(editingValue) || 0)
-          : (parseInt(String(entry.quantity)) || 0);
+          ? parseInt(editingValue) || 0
+          : parseInt(String(entry.quantity)) || 0;
       const listPrice =
         field.formName === "sold_price"
-          ? (parseFloat(editingValue) || 0)
-          : (parseFloat(String(entry.sold_price)) || 0);
+          ? parseFloat(editingValue) || 0
+          : parseFloat(String(entry.sold_price)) || 0;
       const shipping =
         field.formName === "shipping_cost"
-          ? (parseFloat(editingValue) || 0)
-          : (parseFloat(String(entry.shipping_cost)) || 0);
+          ? parseFloat(editingValue) || 0
+          : parseFloat(String(entry.shipping_cost)) || 0;
 
       updatedEntry.total_cost = Number((costPer * qty).toFixed(2));
       updatedEntry.total_price_sold = Number((listPrice * qty).toFixed(2));
       updatedEntry.profit = Number(
-        (updatedEntry.total_price_sold - updatedEntry.total_cost - shipping).toFixed(2),
+        (
+          updatedEntry.total_price_sold -
+          updatedEntry.total_cost -
+          shipping
+        ).toFixed(2),
       );
     }
 
@@ -274,7 +242,6 @@ export function InventoryForm({
     setEditingCell(null);
   };
 
-
   // ---- UI  ----
   return (
     <div className="w-full min-h-screen bg-[#0F1216] p-8 text-zinc-50 flex flex-col gap-10">
@@ -288,12 +255,9 @@ export function InventoryForm({
             className={`flex flex-col justify-between px-3 py-1 border-r border-slate-700 last:border-r-0 min-h-[60px]
       ${field.formName === "product_name" ? "col-span-2" : "col-span-1"}`}
           >
-            {/* Label: Now centered for EVERY column */}
             <label className="text-[10px] uppercase font-bold text-slate-500 mb-1 whitespace-nowrap overflow-hidden text-ellipsis w-full text-center">
               {field.formLabel}
             </label>
-
-            {/* Input: Remains centered for Name, left-aligned for numbers/dates */}
             <input
               type={field.type === "number" ? "text" : field.type}
               value={
@@ -311,11 +275,9 @@ export function InventoryForm({
                 handleChange(field.formName, val);
               }}
               placeholder={field.placeholder}
-              // Adjusted ReadOnly logic to include Total Price Sold
               readOnly={["total_cost", "total_price_sold", "profit"].includes(
                 field.formName,
               )}
-              // checking if the field name is the following and if so skip over it. -1 === do not let user skip while 0 === user can tab
               tabIndex={
                 ["total_cost", "total_price_sold", "profit"].includes(
                   field.formName,
@@ -326,10 +288,8 @@ export function InventoryForm({
               className={`bg-transparent p-1 text-sm outline-none transition-all rounded w-full
     /* checking if field name is profit and adjusted text color */
     ${field.formName === "profit" ? "text-emerald-400 font-bold" : "text-zinc-50"}
-
     /* Added some alignment on the product name field to give it more focus to the user */
     ${field.formName === "product_name" ? "text-center" : "text-left"}
-
     /* ReadOnly Styling: Now also dims Total Price Sold */
     ${
       ["totalCost", "totalPriceSold", "profit"].includes(field.formName)
@@ -366,7 +326,7 @@ export function InventoryForm({
             <table className="w-full min-w-[1000px] text-left border-collapse table-auto">
               <thead>
                 <tr className="border-b border-slate-700 bg-slate-800/50">
-                {/* mapping through our inventory fields to create table headers. e.g Product Name, Cost Per, etc. */}
+                  {/* mapping through our inventory fields to create table headers. e.g Product Name, Cost Per, etc. */}
                   {inventoryFields.map((field) => (
                     <th
                       key={field.formName}
@@ -383,30 +343,27 @@ export function InventoryForm({
                     key={singleFormEntry.id}
                     className="hover:bg-white/5 transition-colors"
                   >
-                    
                     {inventoryFields.map((field) => {
                       const rawValue = singleFormEntry[field.formName];
                       let displayValue: string | number = rawValue ?? "-";
 
-                      if (field.type === "number" && field.formName !== "quantity") {
+                      if (
+                        field.type === "number" &&
+                        field.formName !== "quantity"
+                      ) {
                         displayValue = `$${rawValue ?? 0}`;
                       }
-
-                      // Is THIS specific cell the one currently being edited?
-                      // We check both the row id AND the field name so only one cell
-                      // is active at a time.
                       const isEditing =
                         editingCell?.id === String(singleFormEntry.id) && // should result in true since the cell would belong to the row we are in.
                         editingCell?.field === field.formName;
 
-                      const isReadOnly = READ_ONLY_FIELDS.includes(field.formName);
+                      const isReadOnly = READ_ONLY_FIELDS.includes(
+                        field.formName,
+                      );
 
                       return (
                         <td
                           key={field.formName}
-                          // onDoubleClick triggers inline editing.
-                          // We guard against read-only fields so calculated columns
-                          // can never be edited directly.
                           onDoubleClick={() => {
                             if (!isReadOnly) {
                               handleStartEdit(
@@ -420,35 +377,30 @@ export function InventoryForm({
                             ${isReadOnly ? "cursor-default" : "cursor-pointer hover:bg-sky-900/20"}
                             ${
                               field.formName === "profit"
-                             
                                 ? Number(rawValue) >= 0
                                   ? "text-emerald-400 font-bold "
-                                 
                                   : "text-rose-400 font-bold"
                                 : "text-zinc-300"
                             }`}
                         >
-              
-                          {/*
-                            CONDITIONAL RENDERING — the heart of inline editing.
-                            If isEditing is true, show an <input>.
-                            If isEditing is false, show the plain display text.
-                            React swaps these in and out every time state changes.
-                          */}
-                          
                           {isEditing ? (
                             <input
                               // autoFocus puts the cursor inside the input the moment
                               // it appears — no extra click needed.
                               autoFocus
-                              type={field.type === "number" ? "text" : field.type}
+                              type={
+                                field.type === "number" ? "text" : field.type
+                              }
                               value={editingValue}
                               onChange={(e) => setEditingValue(e.target.value)}
                               // onBlur fires when the user clicks somewhere else.
                               // We treat that as "done" and save the edit.
-                              onBlur={() => handleSaveEdit(singleFormEntry, field)}
+                              onBlur={() =>
+                                handleSaveEdit(singleFormEntry, field)
+                              }
                               onKeyDown={(e) => {
-                                if (e.key === "Enter") handleSaveEdit(singleFormEntry, field);
+                                if (e.key === "Enter")
+                                  handleSaveEdit(singleFormEntry, field);
                                 if (e.key === "Escape") handleCancelEdit();
                               }}
                               className="bg-transparent border-b border-sky-500 outline-none text-sm w-full min-w-[60px]"
@@ -461,7 +413,9 @@ export function InventoryForm({
                     })}
                     <td className="p-2 text-rose-300 opacity-0 hover:opacity-100">
                       <button
-                      onClick={() => deleteEntry(singleFormEntry, setInventoryData)}
+                        onClick={() =>
+                          deleteEntry(singleFormEntry, setInventoryData)
+                        }
                       >
                         <i className="fa-solid fa-delete-left"></i>
                       </button>
@@ -478,4 +432,3 @@ export function InventoryForm({
 }
 
 export default InventoryForm;
-
