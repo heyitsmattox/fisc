@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +20,21 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   mode: initialMode,
 }) => {
   const navigate = useNavigate();
+  
+useEffect(() => {
+
+   const ProtectedRoute = ({
+    isAuthenticated,
+  }: {
+    isAuthenticated: boolean;
+  }) => {
+    if (!isAuthenticated) {
+      // Redirect to login if not authenticated
+      navigate("/login", { replace: true });
+    }
+  };
+}, [navigate])
+
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -72,16 +87,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
     } 
   };
 
-  const ProtectedRoute = ({
-    isAuthenticated,
-  }: {
-    isAuthenticated: boolean;
-  }) => {
-    if (!isAuthenticated) {
-      // Redirect to login if not authenticated
-      return navigate("/login", { replace: true });
-    }
-  };
+
 
   const { data } = supabase.auth.onAuthStateChange((event, session) => {
     if (event === "SIGNED_IN") {
