@@ -1,11 +1,12 @@
 import { useEffect, useState, type JSX } from "react";
 import { supabase } from "../../lib/supabaseClient";
-import type { Database } from "../../lib/database.types";
 import deleteEntry from "../../utils.ts/inventory/deleteEntry";
 import { useInventoryForm } from "../../hooks/useInventoryForm";
 import addEntry from "../../utils.ts/inventory/addEntry";
 import updateFormFields from "./updateFormFields";
 import saveEdit from "./saveEdit";
+import type { Database } from "../../lib/database.types";
+
 
 // TS knows we mean a single row from our inventory table in our Supabase database.
 type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];

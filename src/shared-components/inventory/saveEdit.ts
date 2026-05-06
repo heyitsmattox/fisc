@@ -1,7 +1,8 @@
+import { supabase } from "../../lib/supabaseClient";
 import type { Database } from "../../lib/database.types";
 import type { FieldConfig } from "./InventoryForm";
 type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
-import { supabase } from "../../lib/supabaseClient";
+
 
 const saveEdit = async (
   entry: InventoryEntry,
