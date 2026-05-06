@@ -7,7 +7,7 @@ import addEntry from "../../utils.ts/inventory/addEntry";
 import updateFormFields from "./updateFormFields";
 import saveEdit from "./saveEdit";
 
-// This pulls the exact row definition from your 'inventory' table
+// TS knows we mean a single row from our inventory table in our Supabase database.
 type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
 
 export interface FieldConfig {
@@ -296,13 +296,28 @@ export function InventoryForm({
                               onChange={(e) => setEditingValue(e.target.value)}
                               // onBlur fires when the user clicks somewhere else.
                               // We treat that as "done" and save the edit.
-                              onBlur={() =>
-                                saveEdit(singleFormEntry, field, editingValue, editingCell, setInventoryData, setEditingCell)
+                              onBlur={
+                                () =>
+                                  saveEdit(
+                                    singleFormEntry,
+                                    field,
+                                    editingValue,
+                                    editingCell,
+                                    setInventoryData,
+                                    setEditingCell,
+                                  )
                                 // handleSaveEdit(singleFormEntry, field)
                               }
                               onKeyDown={(e) => {
                                 if (e.key === "Enter")
-                                  saveEdit(singleFormEntry, field, editingValue, editingCell, setInventoryData, setEditingCell)
+                                  saveEdit(
+                                    singleFormEntry,
+                                    field,
+                                    editingValue,
+                                    editingCell,
+                                    setInventoryData,
+                                    setEditingCell,
+                                  );
                                 if (e.key === "Escape") handleCancelEdit();
                               }}
                               className="bg-transparent border-b border-sky-500 outline-none text-sm w-full min-w-[60px]"
