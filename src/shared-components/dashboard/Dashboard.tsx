@@ -1,9 +1,11 @@
 import Navbar from "../layout/Navbar";
 import { PerformanceCard } from "./cards/PerformanceCard";
-import { useInventoryData } from "../../hooks/useInventoryData";
+import { useSalesData } from "../../hooks/useSalesData";
 import { MetricCard } from "./cards/MetricCard";
 import { RoiCard } from "./cards/RoiCard";
 import ProfitAndLostChart from "./charts/ProfitAndLostChart";
+import { formatCurrency } from "../../utils.ts/formatters";
+
 
 export const Dashboard = () => {
   const {
@@ -16,7 +18,7 @@ export const Dashboard = () => {
     isError,
     projectedAnnualROI,
     dailyAverageProfit,
-  } = useInventoryData();
+  } = useSalesData();
 
   if (isLoading) return <div className="p-8 text-white">Loading Stats...</div>;
   if (isError)
@@ -46,7 +48,7 @@ return (
           />
           <MetricCard
             metricString={"Daily Avg Profit"}
-            metric={dailyAverageProfit}
+            metric={formatCurrency(dailyAverageProfit)}
             backgroundVariant="default"
             textColorVariant="default"
           />
@@ -58,14 +60,14 @@ return (
           <MetricCard
             isCompact={true}
             metricString={"Avg Profit per Sale"}
-            metric={numberOfSales > 1 ? profit / (numberOfSales - 1) : profit} 
+            metric={formatCurrency(numberOfSales > 1 ? profit / (numberOfSales - 1) : profit)} 
             backgroundVariant="default"
             textColorVariant="default"
           />
           <MetricCard
             isCompact={true}
             metricString={"Projected Annual ROI"}
-            metric={`${projectedAnnualROI}%`}
+            metric={Number(projectedAnnualROI)}
             backgroundVariant="default"
             textColorVariant="default"
           />

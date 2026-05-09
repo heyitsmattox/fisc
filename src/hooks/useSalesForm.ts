@@ -1,11 +1,11 @@
 import { useState } from "react";
-import type { FieldConfig } from "../shared-components/inventory/InventoryForm";
+import type { FieldConfig } from "../shared-components/sales/SalesForm";
 import type { Database } from "../lib/database.types";
 type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
 
-export function useInventoryForm(config: FieldConfig[]) {
-  const [addInventory, setAddInventory] = useState<InventoryEntry[]>([]);
-  const [inventoryData, setInventoryData] = useState<InventoryEntry[]>([]);
+export function useSalesForm(config: FieldConfig[]) {
+  const [addSale, setAddSale] = useState<InventoryEntry[]>([]);
+  const [saleData, setSaleData] = useState<InventoryEntry[]>([]);
   const [loading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState(() => {
     const initialState: Record<string, string | number> = {};
@@ -15,11 +15,11 @@ export function useInventoryForm(config: FieldConfig[]) {
   return {
     formData,
     setFormData,
-    addInventory,
-    setAddInventory,
+    addSale,
+    setAddSale,
     loading,
     setIsLoading,
-    inventoryData,
-    setInventoryData,
+    saleData,
+    setSaleData,
   };
 }

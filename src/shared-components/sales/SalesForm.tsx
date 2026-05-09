@@ -1,8 +1,8 @@
 import { useEffect, useState, type JSX } from "react";
 import { supabase } from "../../lib/supabaseClient";
-import deleteEntry from "../../utils.ts/inventory/deleteEntry";
-import { useInventoryForm } from "../../hooks/useInventoryForm";
-import addEntry from "../../utils.ts/inventory/addEntry";
+import deleteEntry from "../../utils.ts/sales/deleteEntry";
+import { useSalesForm } from "../../hooks/useSalesForm";
+import addEntry from "../../utils.ts/sales/addEntry";
 import updateFormFields from "./updateFormFields";
 import saveEdit from "./saveEdit";
 import type { Database } from "../../lib/database.types";
@@ -19,12 +19,12 @@ export interface FieldConfig {
   placeholder?: string;
 }
 
-interface DynamicInventoryFormProps {
+interface DynamicSalesFormProps {
   config: FieldConfig[];
 }
 
 //blueprint where every every line in our array represents our a single input
-export const inventoryFields: FieldConfig[] = [
+export const saleFields: FieldConfig[] = [
   {
     formName: "purchase_date",
     formLabel: "Date",
@@ -77,21 +77,21 @@ export const inventoryFields: FieldConfig[] = [
 ];
 
 const READ_ONLY_FIELDS = ["total_cost", "total_price_sold", "profit"];
-export function InventoryForm({
+export function SalesForm({
   //config is our "smart" default in case we reuse this component. By leaving the config prop undefined or not passed, it'll plug in our data from FieldConfig above. If we need different fields we can pass config={otherFieldName}
-  config = inventoryFields,
+  config = saleFields,
   //Telling typescript to only accept an object that has exactly what is defined in the DynamicInventoryFormProps interface.
-}: DynamicInventoryFormProps): JSX.Element {
+}: DynamicSalesFormProps): JSX.Element {
   const {
     formData,
     setFormData,
-    addInventory,
-    setAddInventory,
+    addSale,
+    setAddSale,
     loading,
     setIsLoading,
-    inventoryData,
-    setInventoryData,
-  } = useInventoryForm(config);
+    saleData,
+    setSaleData,
+  } = useSalesForm(config);
 
   // --- Inline editing state ---
   // editingCell tracks WHICH cell is active: we store the row's id and the field name.
@@ -106,26 +106,26 @@ export function InventoryForm({
   const [editingValue, setEditingValue] = useState<string>("");
 
   useEffect(() => {
-    if (addInventory) {
+    if (addSale) {
       const fetchInventory = async () => {
         setIsLoading(true);
         const { data, error } = await supabase.from("inventory").select();
         if (error) {
           console.error("Error fetching inventory:", error.message);
         } else {
-          setInventoryData(data || []);
+          setSaleData(data || []);
         }
         setIsLoading(false);
       };
       fetchInventory();
     }
-  }, [addInventory, setInventoryData, setIsLoading]);
+  }, [addSale, setSaleData, setIsLoading]);
 
   const handleAddEntryBtn = async (
     e: React.FormEvent,
     initialState: Record<string, string | number> = {},
   ) => {
-    await addEntry(e, formData, setAddInventory);
+    await addEntry(e, formData, setAddSale);
     setFormData(initialState);
   };
 
@@ -151,7 +151,7 @@ export function InventoryForm({
         onSubmit={handleAddEntryBtn}
         className="grid grid-cols-10 gap-0 bg-[#1E2329] p-4 rounded-xl shadow-2xl border border-slate-700/50"
       >
-        {inventoryFields.map((field) => (
+        {saleFields.map((field) => (
           <div
             key={field.formName}
             className={`flex flex-col justify-between px-3 py-1 border-r border-slate-700 last:border-r-0 min-h-[60px]
@@ -219,7 +219,7 @@ export function InventoryForm({
           <div className="p-12 text-center text-slate-500 italic bg-slate-900/10">
             Loading inventory...
           </div>
-        ) : inventoryData.length === 0 ? (
+        ) : saleData.length === 0 ? (
           <div className="p-12 text-center text-slate-500 italic bg-slate-900/10">
             No entries found. Fill out the form above to get started.
           </div>
@@ -229,7 +229,7 @@ export function InventoryForm({
               <thead>
                 <tr className="border-b border-slate-700 bg-slate-800/50">
                   {/* mapping through our inventory fields to create table headers. e.g Product Name, Cost Per, etc. */}
-                  {inventoryFields.map((field) => (
+                  {saleFields.map((field) => (
                     <th
                       key={field.formName}
                       className="px-6 py-4 text-[10px] uppercase tracking-wider text-slate-500 font-bold"
@@ -240,12 +240,12 @@ export function InventoryForm({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700/50 ">
-                {inventoryData.map((singleFormEntry) => (
+                {saleData.map((singleFormEntry) => (
                   <tr
                     key={singleFormEntry.id}
                     className="hover:bg-white/5 transition-colors"
                   >
-                    {inventoryFields.map((field) => {
+                    {saleFields.map((field) => {
                       const rawValue = singleFormEntry[field.formName];
                       let displayValue: string | number = rawValue ?? "-";
 
@@ -304,7 +304,7 @@ export function InventoryForm({
                                     field,
                                     editingValue,
                                     editingCell,
-                                    setInventoryData,
+                                    setSaleData,
                                     setEditingCell,
                                   )
                                 // handleSaveEdit(singleFormEntry, field)
@@ -316,7 +316,7 @@ export function InventoryForm({
                                     field,
                                     editingValue,
                                     editingCell,
-                                    setInventoryData,
+                                    setSaleData,
                                     setEditingCell,
                                   );
                                 if (e.key === "Escape") handleCancelEdit();
@@ -332,7 +332,7 @@ export function InventoryForm({
                     <td className="p-2 text-rose-300 opacity-0 hover:opacity-100">
                       <button
                         onClick={() =>
-                          deleteEntry(singleFormEntry, setInventoryData)
+                          deleteEntry(singleFormEntry, setSaleData)
                         }
                       >
                         <i className="fa-solid fa-delete-left"></i>
@@ -349,4 +349,4 @@ export function InventoryForm({
   );
 }
 
-export default InventoryForm;
+export default SalesForm;

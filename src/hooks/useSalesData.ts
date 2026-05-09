@@ -4,7 +4,7 @@ import type { Database } from "../lib/database.types";
 
 type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
 
-export const useInventoryData = () => {
+export const useSalesData = () => {
   const query = useQuery<InventoryEntry[]>({
     queryKey: ["inventoryData"],
     queryFn: async () => {
@@ -45,9 +45,9 @@ const today = new Date();
 const diffInTime = firstEntryDate ? today.getTime() - firstEntryDate.getTime() : 0;
 const daysActive = Math.max(1, Math.ceil(diffInTime / (1000 * 60 * 60 * 24)));
 
-const dailyAverageProfit = totalProfit / daysActive;
+const dailyAverageProfit = (totalProfit / daysActive); // string
 
-const estimatedAnnualProfit = dailyAverageProfit * 365;
+const estimatedAnnualProfit = Number(dailyAverageProfit) * 365;
 const projectedAnnualROI = totalPaid > 0 
   ? ((estimatedAnnualProfit / totalPaid) * 100).toFixed(2) 
   : "0.00";

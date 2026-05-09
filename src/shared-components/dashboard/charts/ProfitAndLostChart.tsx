@@ -6,11 +6,11 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { useInventoryData } from "../../../hooks/useInventoryData";
-import { useState } from "react";
+import { useSalesData } from "../../../hooks/useSalesData";
+
 
 const ProfitAndLostChart = ({ isAnimationActive = true }) => {
-  const { inventory } = useInventoryData();
+  const { inventory } = useSalesData();
 
 
 

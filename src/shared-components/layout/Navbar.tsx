@@ -69,12 +69,12 @@ return (
               Dashboard
             </Link>
             <Link 
-              to="/inventory" 
+              to="/sales" 
               className={`text-xs font-bold uppercase tracking-widest transition-colors py-1 border-b-2 ${
-                location.pathname === '/inventory' ? 'text-white border-emerald-400' : 'border-transparent hover:text-white hover:border-emerald-400'
+                location.pathname === '/sales' ? 'text-white border-emerald-400' : 'border-transparent hover:text-white hover:border-emerald-400'
               }`}
             >
-              Inventory
+              Sales
             </Link>
             <Link 
               to="/reports" 
@@ -139,7 +139,7 @@ return (
                 </li>
                 <li className="hover:text-emerald-400 transition-colors">
                   <i className="pr-2 fa-regular fa-clipboard"></i>
-                  <Link to="/inventory" onClick={handleMenuOpen}>Inventory</Link>
+                  <Link to="/sales" onClick={handleMenuOpen}>Sales</Link>
                 </li>
                 <li className="hover:text-emerald-400 transition-colors">
                   <i className="pr-2 fa-regular fa-user"></i>

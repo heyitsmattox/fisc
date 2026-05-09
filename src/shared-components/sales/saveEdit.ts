@@ -1,6 +1,6 @@
 import { supabase } from "../../lib/supabaseClient";
 import type { Database } from "../../lib/database.types";
-import type { FieldConfig } from "./InventoryForm";
+import type { FieldConfig } from "./SalesForm";
 type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
 
 
