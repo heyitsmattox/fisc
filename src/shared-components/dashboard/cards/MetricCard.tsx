@@ -11,7 +11,7 @@ interface MetricCardProps {
 
 }
 
-export const MetricCard = ({metric, metricString, backgroundVariant = "default", textColorVariant = "default", isCompact = false, avgProfitPerSale}: MetricCardProps): JSX.Element => {
+export const MetricCard = ({metric, metricString, backgroundVariant = "default", textColorVariant = "default", isCompact = false}: MetricCardProps): JSX.Element => {
   const borderVariants = {
     emerald: "border-emerald-400/50",
     rose: "border-rose-400/50",
