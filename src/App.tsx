@@ -1,6 +1,6 @@
 // import Home from "./pages/Home";
 import Dashboard from "./shared-components/dashboard/Dashboard";
-import Inventory from "./shared-components/inventory/Inventory";
+import SalesPage from "./shared-components/sales/SalesPage";
 import Portfolio from "./shared-components/portfolio/Portfolio";
 import Settings from "./pages/Settings";
 import { AuthForm } from "./shared-components/auth/AuthForm";
@@ -26,7 +26,7 @@ const App = () => {
 
           <Route element={<ProtectedRoute isAuthenticated={!!user} />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/inventory" element={<Inventory />} />
+            <Route path="/sales" element={<SalesPage />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/reports" element={<Reports />} />

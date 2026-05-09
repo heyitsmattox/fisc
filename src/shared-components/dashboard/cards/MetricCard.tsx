@@ -2,7 +2,7 @@ import type { JSX } from "react";
 import { formatCurrency } from "../../../utils.ts/formatters";
 
 interface MetricCardProps {
-  metric: number;
+  metric: number | string;
   backgroundVariant?: "emerald" | "rose" | "default";
   metricString: string;
   textColorVariant?: "emerald" | "default";
@@ -27,8 +27,8 @@ export const MetricCard = ({metric, metricString, backgroundVariant = "default",
   const textColor = textColorVariants[textColorVariant as keyof typeof textColorVariants] || textColorVariants.default;
 
   const displayProfitValue  = metricString === "Profit" || metricString === "Avg Profit per Sale" 
-    ? formatCurrency(metric) 
-    : metric.toLocaleString(); // Format as currency for profit, otherwise use locale string for numbers
+    ? (metric)
+    : metric; // Format as currency for profit, otherwise use locale string for numbers
   
   return (
     <div className={`w-full sm:max-w-sm md:max-w-xs bg-[#1E2329] border ${borderColor} rounded-xl shadow-2xl flex flex-col mx-auto md:mx-0 h-fit

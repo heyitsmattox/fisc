@@ -1,8 +1,8 @@
 import Navbar from "../layout/Navbar";
 import SearchBar from "../ui/SearchBar";
-import { InventoryForm, inventoryFields } from "./InventoryForm";
+import { SalesForm, saleFields } from "./SalesForm";
 
-const Inventory = () => {
+const SalesPage = () => {
 
   return (
     <>
@@ -24,9 +24,9 @@ const Inventory = () => {
         />
       </div>
 
-      <InventoryForm config={inventoryFields}  />
+      <SalesForm config={saleFields}  />
     </>
   );
 };
 
-export default Inventory;
+export default SalesPage;

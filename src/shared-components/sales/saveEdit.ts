@@ -1,15 +1,14 @@
 import { supabase } from "../../lib/supabaseClient";
-import type { Database } from "../../lib/database.types";
-import type { FieldConfig } from "./InventoryForm";
-type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
+import type { SalesEntry } from "../../types/salesTypes";
+import type { FieldConfig } from "./SalesForm";
 
 
 const saveEdit = async (
-  entry: InventoryEntry,
+  entry: SalesEntry,
   field: FieldConfig,
   editingValue: string,
   editingCell: { id: string; field: string } | null,
-  setInventoryData: React.Dispatch<React.SetStateAction<InventoryEntry[]>>,
+  setInventoryData: React.Dispatch<React.SetStateAction<SalesEntry[]>>,
   setEditingCell: React.Dispatch<
     React.SetStateAction<{ id: string; field: string } | null>
   >,
@@ -25,7 +24,7 @@ const saveEdit = async (
       : editingValue; // else just use the data type of string
 
   // Build a copy of the row with the new value applied. e.g parsedValue
-  const updatedEntry: InventoryEntry = {
+  const updatedEntry: SalesEntry = {
     ...entry,
     [field.formName]: parsedValue,
   };

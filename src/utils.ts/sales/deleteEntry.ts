@@ -1,6 +1,6 @@
 import React from "react";
 import { supabase } from "../../lib/supabaseClient";
-import type { Database } from "../../../src/lib/database.types";
+import type { Database } from "../../lib/database.types";
 type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
 
 const deleteEntry = async (
