@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../lib/supabaseClient";
-import type { Database } from "../lib/database.types";
+import type { SalesEntry } from "../types/salesTypes";
 
-type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
 
 export const useSalesData = () => {
-  const query = useQuery<InventoryEntry[]>({
+  const query = useQuery<SalesEntry[]>({
     queryKey: ["inventoryData"],
     queryFn: async () => {
       const { data, error } = await supabase.from("inventory")

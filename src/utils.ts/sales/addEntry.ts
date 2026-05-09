@@ -1,12 +1,12 @@
 import React from "react";
 import { supabase } from "../../lib/supabaseClient";
-import type { Database } from "../../lib/database.types";
-type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
+import type { SalesEntry, FormData } from "../../types/salesTypes";
+
 
 const addEntry = async (
   e: React.FormEvent,
-  formData: Record<string, string | number>,
-  setAddInventory: React.Dispatch<React.SetStateAction<InventoryEntry[]>>,
+  formData: FormData,
+  setAddInventory: React.Dispatch<React.SetStateAction<SalesEntry[]>>,
 ) => {
   e.preventDefault();
   const { data, error } = await supabase

@@ -5,14 +5,13 @@ import { useSalesForm } from "../../hooks/useSalesForm";
 import addEntry from "../../utils.ts/sales/addEntry";
 import updateFormFields from "./updateFormFields";
 import saveEdit from "./saveEdit";
-import type { Database } from "../../lib/database.types";
+import type { SalesEntry, FormData } from "../../types/salesTypes";
 
 
-// TS knows we mean a single row from our inventory table in our Supabase database.
-type InventoryEntry = Database["public"]["Tables"]["inventory"]["Row"];
+
 
 export interface FieldConfig {
-  formName: keyof InventoryEntry;
+  formName: keyof SalesEntry;
   formLabel: string; // The text the user sees (e.g., "Cost Per Item")
   type: "text" | "number" | "date";
   defaultValue?: string | number;
@@ -123,7 +122,7 @@ export function SalesForm({
 
   const handleAddEntryBtn = async (
     e: React.FormEvent,
-    initialState: Record<string, string | number> = {},
+    initialState: FormData = {},
   ) => {
     await addEntry(e, formData, setAddSale);
     setFormData(initialState);

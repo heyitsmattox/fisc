@@ -1,5 +1,6 @@
+import type { FormData } from "../../types/salesTypes";
 
-const updateFormFields = (name: string, value: string, setFormData: React.Dispatch<React.SetStateAction<Record<string, string | number>>>) => {
+const updateFormFields = (name: string, value: string, setFormData: React.Dispatch<React.SetStateAction<FormData>>) => {
 
   setFormData((prev) => {
       // Start with the new value
