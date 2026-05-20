@@ -6,7 +6,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { useSalesData } from "../../../hooks/useSalesData";
+import { useSalesData } from "../../../hooks/sales/useSalesData";
 
 
 const ProfitAndLostChart = ({ isAnimationActive = true }) => {

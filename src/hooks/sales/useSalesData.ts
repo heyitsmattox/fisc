@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../lib/supabaseClient";
-import type { SalesEntry } from "../types/salesTypes";
+import { supabase } from "../../lib/supabaseClient";
+import type { SalesEntry } from "../../types/salesTypes";
 
 
 export const useSalesData = () => {

@@ -6,7 +6,7 @@ import Settings from "./pages/Settings";
 import { AuthForm } from "./shared-components/auth/AuthForm";
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useAuth } from "./hooks/useAuth";
+import { useAuth } from "./hooks/auth/useAuth";
 import Reports from "./pages/Reports";
 
 const ProtectedRoute = ({ isAuthenticated }: { isAuthenticated: boolean }) => {

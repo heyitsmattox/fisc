@@ -1,7 +1,7 @@
 import { useEffect, useState, type JSX } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import deleteEntry from "../../utils.ts/sales/deleteEntry";
-import { useSalesForm } from "../../hooks/useSalesForm";
+import { useSalesForm } from "../../hooks/sales/useSalesForm";
 import addEntry from "../../utils.ts/sales/addEntry";
 import updateFormFields from "./updateFormFields";
 import saveEdit from "./saveEdit";
