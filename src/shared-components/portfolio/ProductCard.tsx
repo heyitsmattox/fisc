@@ -2,12 +2,14 @@ import type { SealedPokemonProduct } from "../../hooks/pokemon/useSealedPokemonP
 
 type ProductCardProps = {
   product: SealedPokemonProduct;
+  qty: number | undefined;
+  onAdd: (productId: number) => void;
+  onRemove: (productId: number ) => void;
 };
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, qty, onAdd, onRemove }: ProductCardProps) => {
   return (
     <div className="bg-[#1E2329] border border-slate-700/50 rounded-xl shadow-2xl flex flex-col overflow-hidden">
-
       <div className="flex items-center justify-center p-4 bg-[#161B22] h-48">
         <img
           src={product.image}
@@ -35,10 +37,45 @@ const ProductCard = ({ product }: ProductCardProps) => {
             7 Day Avg
           </div>
         </div>
-      </div>
 
+        <div className="border-t border-slate-700/50" />
+
+        {qty === 0 ? (
+          <button
+            onClick={() => onAdd(product.id)}
+            className="bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 font-bold text-xs uppercase tracking-wide px-3 py-1.5 rounded-md transition-colors self-start"
+          >
+            + Add
+          </button>
+        ) : (
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wide text-slate-400">
+              Qty
+            </span>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => onRemove(product.id)}
+                className="w-7 h-7 flex items-center justify-center rounded-md bg-slate-700/50 hover:bg-slate-600/50 text-zinc-50 font-bold text-sm transition-colors"
+              >
+                −
+              </button>
+              <span className="text-zinc-50 font-bold text-sm w-4 text-center">
+                {qty}
+              </span>
+              <button
+                onClick={() => onAdd(product.id)}
+                className="w-7 h-7 flex items-center justify-center rounded-md bg-emerald-600 hover:bg-emerald-500 text-zinc-50 font-bold text-sm transition-colors"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
 export default ProductCard;
+
+//"Manage your collection. Track your performance. Con brio."
