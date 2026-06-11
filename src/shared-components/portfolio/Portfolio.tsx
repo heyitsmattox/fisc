@@ -16,6 +16,7 @@ const Portfolio = () => {
     setDraftSearchTerm("");
   };
 
+  //add logic to add item to supabase database on each button click
   const handleAdd = (productId: number) => {
 
   setQty((prev) => ({  
@@ -24,16 +25,14 @@ const Portfolio = () => {
  
 }));  
 };
+console.log("qty value", qty)
 
-
+// add logic to make a supabase call to update our db if we remove an item as well as completely removing an item by making the qty > 0
 const handleRemove = (productId: number) => {
-  if(productId !== undefined) {
 setQty((prev) => ({
     ...prev,
     [productId]: (prev[productId] ?? 0) - 1,
   }))
-  }
-  
 }
 
   if (isLoading) return <p>Loading...</p>;

@@ -1,11 +1,11 @@
 import type { SealedPokemonProduct } from "../../hooks/pokemon/useSealedPokemonProducts";
 
-type ProductCardProps = {
+interface ProductCardProps  {
   product: SealedPokemonProduct;
   qty: number | undefined;
   onAdd: (productId: number) => void;
   onRemove: (productId: number ) => void;
-};
+}
 
 const ProductCard = ({ product, qty, onAdd, onRemove }: ProductCardProps) => {
   return (

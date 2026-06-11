@@ -39,7 +39,7 @@ const useSealedPokemonProducts = (searchTerm: string) => {
             },
           }
         )
-        console.log(response.data.data) 
+        console.log("reponse object from api --->",response.data.data) 
         setSealedProducts(response.data.data);
       
       } catch (error) {
