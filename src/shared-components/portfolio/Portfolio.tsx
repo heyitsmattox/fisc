@@ -2,38 +2,24 @@ import { useState } from "react";
 import useSealedPokemonProducts from "../../hooks/pokemon/useSealedPokemonProducts";
 import ProductCard from "./ProductCard";
 import Navbar from "../layout/Navbar";
+import usePortfolio from "../../hooks/portfolio/usePortfolio";
 
 const Portfolio = () => {
   const [draftSearchTerm, setDraftSearchTerm] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [qty, setQty ] = useState<Record<number, number>>({})
   const { sealedProducts, isLoading, error } =
     useSealedPokemonProducts(searchTerm);
-
+  const { qty, handleAdd, handleRemove } = usePortfolio()
+ 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSearchTerm(draftSearchTerm);
     setDraftSearchTerm("");
   };
 
-  //add logic to add item to supabase database on each button click
-  const handleAdd = (productId: number) => {
-
-  setQty((prev) => ({  
-  ...prev, 
-  [productId]: (prev[productId] ?? 0) + 1,
- 
-}));  
-};
 console.log("qty value", qty)
 
-// add logic to make a supabase call to update our db if we remove an item as well as completely removing an item by making the qty > 0
-const handleRemove = (productId: number) => {
-setQty((prev) => ({
-    ...prev,
-    [productId]: (prev[productId] ?? 0) - 1,
-  }))
-}
+
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
