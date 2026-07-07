@@ -1,19 +1,39 @@
-//owns the qty state, handles add/remove logic, 
-// and makes the Supabase calls (upsert on add, 
-// update/delete on remove)
+
+
 import { useState } from "react";
+import { supabase } from "../../lib/supabaseClient";
+import { useAuth } from "../auth/useAuth";
 
 const usePortfolio = () => {
   const [qty, setQty ] = useState<Record<number, number>>({})
+  const { user } = useAuth();
 
-    //product_name, price, image
-  const handleAdd = (productId: number) => {
+  const handleAdd = async (productId: number, product_name: string, price: number, image: string) => {
 
   setQty((prev) => ({  
   ...prev, 
   [productId]: (prev[productId] ?? 0) + 1,
  
 }));  
+if( !user) return;
+const { error } = await supabase
+  
+  .from("portfolio")
+  .insert({
+   user_id: user?.id,
+   product_id: productId,
+   product_name: product_name,
+   quantity: (qty[productId] ?? 0) + 1,
+   price: price,
+   image: image,
+  })
+  .select()
+
+  if( error) {
+    console.error("Failed to add to database.", error.message);
+  }
+ 
+
 };
 
 const handleRemove = (productId: number) => {

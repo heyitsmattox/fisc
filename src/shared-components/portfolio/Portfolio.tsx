@@ -58,7 +58,7 @@ console.log("qty value", qty)
               key={product.id}
               product={product}
               qty={qty[product.id] ?? 0}
-              onAdd={handleAdd}
+              onAdd={(productId) => handleAdd(productId, product.name, product.prices.cardmarket["7d_average"], product.image)}
               onRemove={handleRemove}
             />
           ))}
