@@ -9,17 +9,15 @@ const Portfolio = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { sealedProducts, isLoading, error } =
     useSealedPokemonProducts(searchTerm);
-  const { qty, handleAdd, handleRemove } = usePortfolio()
- 
+  const { qty, handleAdd, handleRemove } = usePortfolio();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSearchTerm(draftSearchTerm);
     setDraftSearchTerm("");
   };
 
-console.log("qty value", qty)
-
-
+  console.log("qty value", qty);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -58,7 +56,19 @@ console.log("qty value", qty)
               key={product.id}
               product={product}
               qty={qty[product.id] ?? 0}
-              onAdd={(productId) => handleAdd(productId, product.name, product.prices.cardmarket["7d_average"], product.image)}
+              // we are building each product by clicking onAdd which has acccess
+              //to product.name, product.image and etc
+              // user clicks on the add button on ProductCard --> it calls onAdd while passing
+              //the product.id which also calls the function handleAdd which contains all the values
+
+              onAdd={(productId) =>
+                handleAdd(
+                  productId,
+                  product.name,
+                  product.prices.cardmarket["7d_average"],
+                  product.image,
+                )
+              }
               onRemove={handleRemove}
             />
           ))}
