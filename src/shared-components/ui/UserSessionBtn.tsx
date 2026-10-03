@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks//auth/useAuth";
 import { supabase } from "../../lib/supabaseClient";
 
 const UserSessionBtn = () => {

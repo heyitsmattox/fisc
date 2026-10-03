@@ -1,6 +1,6 @@
 import Navbar from "../layout/Navbar";
 import { PerformanceCard } from "./cards/PerformanceCard";
-import { useSalesData } from "../../hooks/useSalesData";
+import { useSalesData } from "../../hooks//sales/useSalesData";
 import { MetricCard } from "./cards/MetricCard";
 import { RoiCard } from "./cards/RoiCard";
 import ProfitAndLostChart from "./charts/ProfitAndLostChart";

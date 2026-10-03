@@ -12,7 +12,6 @@ interface SearchBarProps {
 const SearchBar = ({ 
   searchBarPlaceholderTxt = "Search", 
   buttonText = "New Entry", 
-  onButtonClick,
   widthOfSearchBar = "w-72" 
 }: SearchBarProps): JSX.Element => {
   const [text, setText] = useState<string>("");

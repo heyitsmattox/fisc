@@ -2,11 +2,12 @@
 import Dashboard from "./shared-components/dashboard/Dashboard";
 import SalesPage from "./shared-components/sales/SalesPage";
 import Portfolio from "./shared-components/portfolio/Portfolio";
+import PortfolioHome from "./shared-components/portfolio/PortfolioHome";
 import Settings from "./pages/Settings";
 import { AuthForm } from "./shared-components/auth/AuthForm";
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useAuth } from "./hooks/useAuth";
+import { useAuth } from "./hooks/auth/useAuth";
 import Reports from "./pages/Reports";
 
 const ProtectedRoute = ({ isAuthenticated }: { isAuthenticated: boolean }) => {
@@ -27,7 +28,8 @@ const App = () => {
           <Route element={<ProtectedRoute isAuthenticated={!!user} />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/sales" element={<SalesPage />} />
-            <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/portfolio" element={<PortfolioHome />} />
+            <Route path="/portfolio/add" element={<Portfolio />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/reports" element={<Reports />} />
           </Route>
