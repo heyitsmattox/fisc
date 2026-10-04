@@ -17,18 +17,13 @@ const usePortfolio = () => {
       [productId]: (prev[productId] ?? 0) + 1,
     }));
     if (!user) return;
-    const { error } = await supabase
-
-      .from("portfolio")
-      .insert({
-        user_id: user?.id,
-        product_id: productId,
-        product_name: productName,
-        quantity: (qty[productId] ?? 0) + 1,
-        price: price,
-        image: image,
-      })
-      .select();
+    const { error } = await supabase.rpc("increment_portfolio_qty", {
+      p_user_id: user.id,
+      p_product_id: productId,
+      p_product_name: productName,
+      p_price: price,
+      p_image: image,
+    });
 
     if (error) {
       console.error("Failed to add to database.", error.message);

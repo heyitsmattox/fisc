@@ -12,12 +12,6 @@ const PortfolioHome = () => {
           <h1 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
             My Portfolio
           </h1>
-          <button
-            onClick={() => navigate("/portfolio/add")}
-            className="bg-emerald-600 hover:bg-emerald-500 text-zinc-50 font-bold text-xs uppercase tracking-wide px-5 py-2.5 rounded-lg transition-colors"
-          >
-            + Add Items
-          </button>
         </div>
 
         <div className="flex flex-col items-center justify-center gap-4 py-24 border border-dashed border-slate-700/50 rounded-xl">
