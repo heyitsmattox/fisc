@@ -1,7 +1,7 @@
 // import Home from "./pages/Home";
 import Dashboard from "./shared-components/dashboard/Dashboard";
 import SalesPage from "./shared-components/sales/SalesPage";
-import Portfolio from "./shared-components/portfolio/Portfolio";
+import AddToPortfolio from "./shared-components/portfolio/AddToPortfolio";
 import PortfolioHome from "./shared-components/portfolio/PortfolioHome";
 import Settings from "./pages/Settings";
 import { AuthForm } from "./shared-components/auth/AuthForm";
@@ -29,7 +29,7 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/sales" element={<SalesPage />} />
             <Route path="/portfolio" element={<PortfolioHome />} />
-            <Route path="/portfolio/add" element={<Portfolio />} />
+            <Route path="/portfolio/add" element={<AddToPortfolio />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/reports" element={<Reports />} />
           </Route>

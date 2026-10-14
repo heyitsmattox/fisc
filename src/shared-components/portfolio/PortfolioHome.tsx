@@ -1,8 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import Navbar from "../layout/Navbar";
+import usePortfolio from "../../hooks/portfolio/usePortfolio";
 
 const PortfolioHome = () => {
   const navigate = useNavigate();
+  const { portfolioData, isLoading, error } = usePortfolio();
+
+  // map through portfolioData and render it to the client using some sort of 
+  // card component that can handle and display the UI nicely
+
+  //However, if portfolioData is empty we should show the UI we are currently displaying
+  // check if isLoading then display a spinner
+  // error we can display an error banner of some sort
+  //otherwise, display the UI
 
   return (
     <>
