@@ -1,10 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import { useAuth } from "../auth/useAuth";
+import type { Tables } from "../../lib/database.types";
+
+export type PortfolioData = Tables<"portfolio">;
 
 const usePortfolio = () => {
-  const [qty, setQty] = useState<Record<number, number>>({});
+  const [ qty, setQty ] = useState<Record<number, number>>({});
+  const [ isLoading, setIsLoading ] = useState<boolean>(true)
+  const  [error, setError ] = useState<string | null>(null)
+  const [ portfolioData, setPortfolioData ] = useState<PortfolioData[] | null>(null);
   const { user } = useAuth();
+
+
+    useEffect(() => {
+      const fetchPortfolioData = async () => {
+        setIsLoading(true);
+      
+        try {
+          const { data, error } = await supabase
+          .from('portfolio')
+          .select()
+
+           if (error) {
+          console.error("Failed to fetch portfolio data", error);
+    }
+
+          setPortfolioData(data)
+        } catch ( error ) {
+          setError("Failed to fetch the user's portfolio")
+          console.error("error trying to receive the portfolio", error)
+        }
+        setIsLoading(false)
+      }
+
+
+   
+
+      fetchPortfolioData()
+    }, [user?.id])
+  
 
   const handleAdd = async (
     productId: number,
@@ -37,7 +72,7 @@ const usePortfolio = () => {
     }));
   };
 
-  return { qty, handleAdd, handleRemove };
+  return { portfolioData, error, isLoading, qty, handleAdd, handleRemove };
 };
 
 export default usePortfolio;

@@ -4,7 +4,7 @@ import ProductCard from "./ProductCard";
 import Navbar from "../layout/Navbar";
 import usePortfolio from "../../hooks/portfolio/usePortfolio";
 
-const Portfolio = () => {
+const AddToPortfolio = () => {
   const [draftSearchTerm, setDraftSearchTerm] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { sealedProducts, isLoading, error } =
@@ -17,7 +17,7 @@ const Portfolio = () => {
     setDraftSearchTerm("");
   };
 
-  console.log("qty value", qty);
+  console.log("qty value from Portfolio component", qty);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -78,4 +78,4 @@ const Portfolio = () => {
   );
 };
 
-export default Portfolio;
+export default AddToPortfolio;
