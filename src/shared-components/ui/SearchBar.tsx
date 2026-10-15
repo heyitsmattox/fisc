@@ -28,14 +28,14 @@ const SearchBar = ({
     >
       {/* Search Input Group */}
       <div className="relative group">
-        <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors"></i>
+        <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors"></i>
         <input
           type="text"
           value={text}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setText(e.target.value)
           }
-          className={`${widthOfSearchBar} pl-10 pr-3 py-1.5 rounded-md bg-[#1E2329] border border-zinc-700 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-slate-100 transition-all`}
+          className={`${widthOfSearchBar} pl-10 pr-3 py-1.5 rounded-md bg-surface border border-slate-700/50 text-zinc-50 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-100 transition-all`}
           placeholder={searchBarPlaceholderTxt}
         />
       </div>

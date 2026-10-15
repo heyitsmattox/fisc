@@ -31,7 +31,7 @@ export const MetricCard = ({metric, metricString, backgroundVariant = "default",
     : metric; // Format as currency for profit, otherwise use locale string for numbers
   
   return (
-    <div className={`w-full sm:max-w-sm md:max-w-xs bg-[#1E2329] border ${borderColor} rounded-xl shadow-2xl flex flex-col mx-auto md:mx-0 h-fit
+    <div className={`w-full sm:max-w-sm md:max-w-xs bg-surface border ${borderColor} rounded-xl shadow-2xl flex flex-col mx-auto md:mx-0 h-fit
       ${isCompact ? "p-8 gap-1" : "p-6 gap-6"} 
     `}>
       <div className="flex flex-col">

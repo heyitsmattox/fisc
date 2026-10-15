@@ -39,7 +39,7 @@ const AddToPortfolio = () => {
               placeholder="e.g. Fusion Strike Booster Box"
               value={draftSearchTerm}
               onChange={(e) => setDraftSearchTerm(e.target.value)}
-              className="flex-1 bg-[#161B22] border border-slate-700/50 rounded-lg px-4 py-2.5 text-zinc-50 placeholder:text-slate-500 text-sm outline-none focus:border-emerald-500/50"
+              className="flex-1 bg-well border border-slate-700/50 rounded-lg px-4 py-2.5 text-zinc-50 placeholder:text-slate-500 text-sm outline-none focus:border-emerald-500/50"
             />
             <button
               type="submit"

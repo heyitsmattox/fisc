@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-[#1E2329] text-zinc-50;
+    @apply bg-surface text-zinc-50;
   }
 }
 

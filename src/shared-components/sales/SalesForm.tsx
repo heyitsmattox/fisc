@@ -145,10 +145,10 @@ export function SalesForm({
 
   // ---- UI  ----
   return (
-    <div className="w-full min-h-screen bg-[#0F1216] p-8 text-zinc-50 flex flex-col gap-10">
+    <div className="w-full min-h-screen bg-surface p-8 text-zinc-50 flex flex-col gap-10">
       <form
         onSubmit={handleAddEntryBtn}
-        className="grid grid-cols-10 gap-0 bg-[#1E2329] p-4 rounded-xl shadow-2xl border border-slate-700/50"
+        className="grid grid-cols-10 gap-0 bg-surface p-4 rounded-xl shadow-2xl border border-slate-700/50"
       >
         {saleFields.map((field) => (
           <div
@@ -206,14 +206,14 @@ export function SalesForm({
 
         <button
           type="submit"
-          className="col-span-10 justify-self-center w-full max-w-xs mt-8 bg-sky-600 hover:bg-sky-500 text-white font-medium py-2 rounded-lg transition-colors shadow-lg"
+          className="col-span-10 justify-self-center w-full max-w-xs mt-8 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 font-bold text-xs uppercase tracking-wide py-2.5 rounded-lg transition-colors"
         >
           Add Entry
         </button>
       </form>
 
       {/* Conditional rendering for inventory data */}
-      <div className="w-full overflow-hidden rounded-xl border border-slate-700/50 bg-[#1E2329] shadow-2xl">
+      <div className="w-full overflow-hidden rounded-xl border border-slate-700/50 bg-surface shadow-2xl">
         {loading ? (
           <div className="p-12 text-center text-slate-500 italic bg-slate-900/10">
             Loading inventory...

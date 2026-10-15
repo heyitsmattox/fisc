@@ -1,19 +1,18 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import UserSessionBtn from "../ui/UserSessionBtn";
+import Logo from "../ui/Logo";
 
 
 
 
 interface NavbarProps {
-  fiscImageLogo?: string;
   showFiscImageLogo: boolean;
   navbarMenuIcon?: string;
   showNavbarMenuIcon: boolean;
 }
 
 const Navbar = ({
-  fiscImageLogo = "src/assets/logo.png",
   navbarMenuIcon = "fa-solid fa-bars text-slate-400 text-2xl cursor-pointer",
   showNavbarMenuIcon = true,
 }: NavbarProps) => {
@@ -36,24 +35,7 @@ return (
           
           {/* LOGO SECTION */}
           <div className="flex items-center z-10">
-            <div className="flex items-center relative">
-              <img
-                src={fiscImageLogo}
-                className="w-[262px] h-auto object-contain block"
-                alt="Logo"
-              />
-              <span
-                className="
-                  text-2xl text-white tracking-wider 
-                  -ml-[122px] select-none
-                  font-bold uppercase font-inter
-                  /* This nudge ensures the text baseline matches the logo icon */
-                  transform translate-y-[2px]
-                "
-              >
-                FISC
-              </span>
-            </div>
+            <Logo size="sm" />
           </div>
 
           {/* CENTER NAVIGATION LINKS (Desktop) */}
@@ -91,7 +73,7 @@ return (
             {showNavbarMenuIcon && (
               <button
                 onClick={handleMenuOpen}
-                className="flex items-center justify-center p-2 transition-colors hover:bg-zinc-800 rounded-md group"
+                className="flex items-center justify-center p-2 transition-colors hover:bg-slate-700/30 rounded-md group"
                 aria-label="Open Menu"
               >
                 <i className={`${navbarMenuIcon} text-zinc-400 group-hover:text-white text-2xl`}></i>
@@ -113,18 +95,16 @@ return (
           {/* Drawer Panel */}
           <div
             className={`
-              fixed top-0 right-0 h-full w-72 bg-[#161B22] border-l border-zinc-800 shadow-2xl z-50
+              fixed top-0 right-0 h-full w-72 bg-well border-l border-slate-700/50 shadow-2xl z-50
               transform transition-transform duration-300 ease-in-out
               ${isMenuOpen ? "translate-x-0" : "translate-x-full"}
             `}
           >
-            <div className="flex justify-between items-center p-6 border-b border-zinc-800">
-              <span className="text-zinc-400 shrink-0 font-bold  uppercase tracking-widest text-[18px] transition-all duration-200">
-                fisc
-              </span>
+            <div className="flex justify-between items-center p-6 border-b border-slate-700/50">
+              <Logo size="sm" />
               <button
                 onClick={handleMenuOpen}
-                className="text-2xl text-zinc-500 hover:text-rose-400 transition-colors"
+                className="text-2xl text-slate-400 hover:text-rose-400 transition-colors"
               >
                 <i className="fa-solid fa-xmark"></i>
               </button>
@@ -132,7 +112,7 @@ return (
 
             {/* Side Menu Navigation */}
             <nav className="p-8" >
-              <ul className="flex flex-col gap-8 shrink-0 font-bold  tracking-widest text-[16px] transition-all duration-200 text-zinc-300">
+              <ul className="flex flex-col gap-8 shrink-0 font-bold  tracking-widest text-[16px] transition-all duration-200 text-zinc-50">
                 <li className="hover:text-emerald-400 transition-colors">
                   <i className="pr-2 fa-solid fa-chart-line"></i>
                   <Link to="/dashboard" onClick={handleMenuOpen}>Dashboard</Link>

@@ -10,8 +10,8 @@ const PortfolioItemCard = ({ item }: PortfolioItemCardProps) => {
   const totalValue = price * quantity;
 
   return (
-    <div className="bg-[#1E2329] border border-slate-700/50 rounded-xl shadow-2xl flex flex-col overflow-hidden">
-      <div className="flex items-center justify-center p-4 bg-[#161B22] h-48">
+    <div className="bg-surface border border-slate-700/50 rounded-xl shadow-2xl flex flex-col overflow-hidden">
+      <div className="flex items-center justify-center p-4 bg-well h-48">
         <img
           src={item.image ?? undefined}
           alt={item.product_name ?? "Portfolio item"}

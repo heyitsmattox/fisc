@@ -12,8 +12,8 @@ export const PerformanceCard = ({
 }: PerformanceCardProps): JSX.Element => {
 
   return (
-    <div className="w-full sm:max-w-sm md:max-w-xs bg-[#1E2329] border-t border-t-white border border-slate-700/50 rounded-xl p-6 shadow-2xl flex flex-col gap-6 mx-auto md:mx-0">
-      <h2 className="text-[13px] uppercase font-black text-white tracking-[0.2em]">
+    <div className="w-full sm:max-w-sm md:max-w-xs bg-surface border border-slate-700/50 rounded-xl p-6 shadow-2xl flex flex-col gap-6 mx-auto md:mx-0">
+      <h2 className="text-xs uppercase font-black text-slate-400 tracking-[0.2em]">
         Performance
       </h2>
       <div className="flex flex-col">
@@ -21,7 +21,7 @@ export const PerformanceCard = ({
           <div className="text-3xl md:text-4xl font-bold tracking-tight text-emerald-400">
             {formatCurrency(totalProfit)}
           </div>
-          <div className="text-sky-300 text-xs font-bold uppercase mt-2 tracking-wide">
+          <div className="text-slate-400 text-xs font-bold uppercase mt-2 tracking-wide">
             Total Profit
           </div>
         </div>
@@ -29,7 +29,7 @@ export const PerformanceCard = ({
           <div className="text-3xl md:text-4xl font-bold text-zinc-50 tracking-tight">
             {formatCurrency(totalPaid)}
           </div>
-          <div className="text-sky-300 text-xs font-bold uppercase mt-2 tracking-wide">
+          <div className="text-slate-400 text-xs font-bold uppercase mt-2 tracking-wide">
             Total Paid
           </div>
         </div>

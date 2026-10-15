@@ -8,8 +8,12 @@ export default {
   theme: {
     extend: {
        display: ["group-hover"],
+      colors: {
+        surface: '#1E2329',
+        well: '#161B22',
+      },
       fontFamily: {
-        inter: ['Inter', 'sans-serif'], 
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
     },
   },

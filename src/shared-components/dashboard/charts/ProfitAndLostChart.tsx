@@ -84,7 +84,7 @@ return (
       <Tooltip
         contentStyle={{
           backgroundColor: "#1E2329",
-          border: "1px solid #334155",
+          border: "1px solid rgba(51,65,85,0.5)",
           borderRadius: "8px",
           fontSize: "12px",
         }}

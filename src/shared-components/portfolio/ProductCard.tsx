@@ -9,8 +9,8 @@ interface ProductCardProps  {
 
 const ProductCard = ({ product, qty, onAdd, onRemove }: ProductCardProps) => {
   return (
-    <div className="bg-[#1E2329] border border-slate-700/50 rounded-xl shadow-2xl flex flex-col overflow-hidden">
-      <div className="flex items-center justify-center p-4 bg-[#161B22] h-48">
+    <div className="bg-surface border border-slate-700/50 rounded-xl shadow-2xl flex flex-col overflow-hidden">
+      <div className="flex items-center justify-center p-4 bg-well h-48">
         <img
           src={product.image}
           alt={product.name}
@@ -19,7 +19,7 @@ const ProductCard = ({ product, qty, onAdd, onRemove }: ProductCardProps) => {
       </div>
 
       <div className="flex flex-col gap-3 p-4">
-        <span className="text-xs font-bold uppercase tracking-wide text-sky-300">
+        <span className="text-xs font-bold uppercase tracking-wide text-slate-400">
           {product.episode.code}
         </span>
 
