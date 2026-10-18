@@ -50,6 +50,14 @@ return (
             >
               Dashboard
             </Link>
+             <Link 
+              to="/portfolio" 
+              className={`text-xs font-bold uppercase tracking-widest transition-colors py-1 border-b-2 ${
+                location.pathname === '/portfolio' ? 'text-white border-emerald-400' : 'border-transparent hover:text-white hover:border-emerald-400'
+              }`}
+            >
+              Portfolio
+            </Link>
             <Link 
               to="/sales" 
               className={`text-xs font-bold uppercase tracking-widest transition-colors py-1 border-b-2 ${
