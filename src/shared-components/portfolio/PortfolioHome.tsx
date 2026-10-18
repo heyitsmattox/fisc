@@ -51,7 +51,20 @@ const PortfolioHome = () => {
         )}
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
-          <PortfolioStatCard value={String(totalItems)} label="Total Items" />
+          <PortfolioStatCard 
+          value={String(totalItems)} 
+          label="Total Items" 
+          />
+           <PortfolioStatCard
+            value={`$1500.75`}
+            label="Unrealized Gains"
+            fontColor="text-emerald-400"
+          />
+          <PortfolioStatCard
+            value={"6"}
+            label="WishList Items"
+            fontColor= "text-sky-400"
+          />
           <PortfolioStatCard
             value={`$${totalPortfolioValue.toFixed(2)}`}
             label="Total Spent"
