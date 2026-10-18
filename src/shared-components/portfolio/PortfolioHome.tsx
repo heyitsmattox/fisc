@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../layout/Navbar";
 import usePortfolio from "../../hooks/portfolio/usePortfolio";
 import PortfolioItemCard from "./PortfolioItemCard";
+import PortfolioStatCard from "./PortfolioStatCard";
 
 const PortfolioHome = () => {
   const navigate = useNavigate();
@@ -12,6 +13,10 @@ const PortfolioHome = () => {
 
   const totalPortfolioValue = items.reduce(
     (sum, item) => sum + (item.price ?? 0) * (item.quantity ?? 0),
+    0
+  );
+  const totalItems = items.reduce(
+     (sum, item) => sum +  (item.quantity ?? 0),
     0
   );
 
@@ -34,7 +39,6 @@ const PortfolioHome = () => {
               + Add Item
             </button>
         </div>
-
         {!isEmpty && (
           <div className="flex flex-col items-center justify-center text-center py-6">
             <div className="text-white font-bold tracking-tight text-4xl md:text-5xl">
@@ -45,6 +49,14 @@ const PortfolioHome = () => {
             </div>
           </div>
         )}
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+          <PortfolioStatCard value={String(totalItems)} label="Total Items" />
+          <PortfolioStatCard
+            value={`$${totalPortfolioValue.toFixed(2)}`}
+            label="Total Spent"
+          />
+        </div>
 
         {isEmpty ? (
           <div className="flex flex-col items-center justify-center gap-4 py-24 border border-dashed border-slate-700/50 rounded-xl">
