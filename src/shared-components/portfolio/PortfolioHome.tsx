@@ -31,7 +31,7 @@ const PortfolioHome = () => {
               onClick={() => navigate("/portfolio/add")}
               className="bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 font-bold text-xs uppercase tracking-wide px-5 py-2.5 rounded-lg transition-colors"
             >
-              Search for products
+              + Add Item
             </button>
         </div>
 
