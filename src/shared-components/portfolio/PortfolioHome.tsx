@@ -56,7 +56,7 @@ const PortfolioHome = () => {
           label="Total Items" 
           />
            <PortfolioStatCard
-            value={`$1500.75`}
+            value={`+$1500.75`}
             label="Unrealized Gains"
             fontColor="text-emerald-400"
           />
