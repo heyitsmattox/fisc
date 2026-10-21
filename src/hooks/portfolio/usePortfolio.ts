@@ -46,6 +46,7 @@ const usePortfolio = () => {
     productName: string,
     price: number,
     image: string,
+    productType: "sealed" | "single",
   ) => {
     setQty((prev) => ({
       ...prev,
@@ -58,6 +59,7 @@ const usePortfolio = () => {
       p_product_name: productName,
       p_price: price,
       p_image: image,
+      p_product_type: productType,
     });
 
     if (error) {

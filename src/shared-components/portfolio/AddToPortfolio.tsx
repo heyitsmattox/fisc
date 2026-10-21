@@ -67,6 +67,8 @@ const AddToPortfolio = () => {
                   product.name,
                   product.prices.cardmarket["7d_average"],
                   product.image,
+                  "sealed",
+
                 )
               }
               onRemove={handleRemove}
