@@ -20,6 +20,8 @@ const PortfolioHome = () => {
     0
   );
 
+
+
   // check if isLoading then display a spinner
   // error we can display an error banner of some sort
 

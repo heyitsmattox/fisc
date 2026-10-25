@@ -1,5 +1,16 @@
+interface AllocationSlice {
+  label: string;
+  pct: number;
+  color: string;
+}
 
-const AllocationSidebar = () => {
+interface AllocationSidebarProps {
+allocationArray: AllocationSlice[];
+}
+
+const AllocationSidebar = ({allocationArray}: AllocationSidebarProps) => {
+
+
 
 };
 
