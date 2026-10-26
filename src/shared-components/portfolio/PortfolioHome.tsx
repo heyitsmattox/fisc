@@ -3,6 +3,7 @@ import Navbar from "../layout/Navbar";
 import usePortfolio from "../../hooks/portfolio/usePortfolio";
 import PortfolioItemCard from "./PortfolioItemCard";
 import PortfolioStatCard from "./PortfolioStatCard";
+import AllocationSidebar from "./portfolio sidebar/AllocationSidebar";
 
 const PortfolioHome = () => {
   const navigate = useNavigate();
@@ -19,12 +20,37 @@ const PortfolioHome = () => {
      (sum, item) => sum +  (item.quantity ?? 0),
     0
   );
+const startingAllocation = { sealed: 0, single: 0 };
+// need to add the logic to convert the number in sealed and single as a percentage. e.g if we
+//have 10 total items and 5 are sealed and 5 are single. The sealed number should be 50% and singles
+//should also be 50%
+const allocationSidebar = items.reduce(
+  //acc, item is the current row being processed
+  (totals, item) => {
+    if(item.product_type === "sealed") {
+      totals.sealed = totals.sealed + (item.quantity ?? 0)
+    } else if(item.product_type === "single") {
+      totals.single = totals.single + (item.quantity ?? 0)
+    }
+    //add the conditional for when graded slabs are implemented.
+    return totals //whole object
+  }, startingAllocation //starting value for accumulator
+)
+//lookup object
+const displayInfo = {
+  sealed: { label: "Sealed Product", color: "#34d399" },
+  single: { label: "Singles", color: "#38bdf8" },
+};
 
+const formatAllocationArray = Object.entries(allocationSidebar).map(([type, qty]) => {
+let pct = (qty / totalItems) * 100;
 
-
-  // check if isLoading then display a spinner
-  // error we can display an error banner of some sort
-
+return {
+  label: displayInfo[type as keyof typeof displayInfo].label,
+  color: displayInfo[type as keyof typeof displayInfo].color,
+  pct,
+};
+})
   return (
     <>
       <Navbar showFiscImageLogo={true} showNavbarMenuIcon={true} />
@@ -72,26 +98,33 @@ const PortfolioHome = () => {
             label="Total Spent"
           />
         </div>
+        <div className="flex flex-col lg:flex-row gap-6 items-start">
+          <div className="w-full lg:max-w-[260px] flex flex-col gap-5">
+            <AllocationSidebar allocationArray={formatAllocationArray} />
+          </div>
 
-        {isEmpty ? (
-          <div className="flex flex-col items-center justify-center gap-4 py-24 border border-dashed border-slate-700/50 rounded-xl">
-            <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">
-              No items yet
-            </p>
-            <button
-              onClick={() => navigate("/portfolio/add")}
-              className="bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 font-bold text-xs uppercase tracking-wide px-5 py-2.5 rounded-lg transition-colors"
-            >
-              Search for products
-            </button>
+          <div className="flex-1 min-w-0 w-full">
+            {isEmpty ? (
+              <div className="flex flex-col items-center justify-center gap-4 py-24 border border-dashed border-slate-700/50 rounded-xl">
+                <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">
+                  No items yet
+                </p>
+                <button
+                  onClick={() => navigate("/portfolio/add")}
+                  className="bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 font-bold text-xs uppercase tracking-wide px-5 py-2.5 rounded-lg transition-colors"
+                >
+                  Search for products
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 pb-12">
+                {items.map((item) => (
+                  <PortfolioItemCard key={item.id} item={item} />
+                ))}
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 pb-12">
-            {items.map((item) => (
-              <PortfolioItemCard key={item.id} item={item} />
-            ))}
-          </div>
-        )}
+        </div>
       </div>
     </>
   );
