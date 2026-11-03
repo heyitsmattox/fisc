@@ -4,6 +4,8 @@ import usePortfolio from "../../hooks/portfolio/usePortfolio";
 import PortfolioItemCard from "./PortfolioItemCard";
 import PortfolioStatCard from "./PortfolioStatCard";
 import AllocationSidebar from "./portfolio sidebar/AllocationSidebar";
+import RecentlyAddedSidebar from "./portfolio sidebar/RecentlyAddedSidebar";
+
 
 const PortfolioHome = () => {
   const navigate = useNavigate();
@@ -11,6 +13,10 @@ const PortfolioHome = () => {
 
   const items = portfolioData ?? [];
   const isEmpty = items.length === 0;
+
+//items are sorted newest-first by our query in usePortfolio
+  const recentItems = items.slice(0,3);
+
 
   const totalPortfolioValue = items.reduce(
     (sum, item) => sum + (item.price ?? 0) * (item.quantity ?? 0),
@@ -105,7 +111,9 @@ return {
         <div className="flex flex-col lg:flex-row gap-6 items-start">
           <div className="w-full lg:max-w-[260px] flex flex-col gap-5">
             <AllocationSidebar allocationArray={formatAllocationArray} />
+            <RecentlyAddedSidebar recentItemsArray={recentItems} />
           </div>
+         
 
           <div className="flex-1 min-w-0 w-full">
             {isEmpty ? (

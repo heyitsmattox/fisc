@@ -21,6 +21,7 @@ const usePortfolio = () => {
           const { data, error } = await supabase
           .from('portfolio')
           .select()
+          .order('created_at', { ascending: false } )
 
            if (error) {
           console.error("Failed to fetch portfolio data", error);
