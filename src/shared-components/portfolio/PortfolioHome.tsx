@@ -27,6 +27,9 @@ const startingAllocation = { sealed: 0, single: 0 };
 const allocationSidebar = items.reduce(
   //acc, item is the current row being processed
   (totals, item) => {
+    //totals starts at { sealed: 0, single: 0 }
+    // item starts at our first row in portfolioData containing product_type, quantity, etc. e.g { product_type: "sealed", quantity: 3 },
+
     if(item.product_type === "sealed") {
       totals.sealed = totals.sealed + (item.quantity ?? 0)
     } else if(item.product_type === "single") {
@@ -36,7 +39,7 @@ const allocationSidebar = items.reduce(
     return totals //whole object
   }, startingAllocation //starting value for accumulator
 )
-//lookup object
+//lookup table 
 const displayInfo = {
   sealed: { label: "Sealed Product", color: "#34d399" },
   single: { label: "Singles", color: "#38bdf8" },
@@ -50,6 +53,7 @@ return {
   color: displayInfo[type as keyof typeof displayInfo].color,
   pct,
 };
+//return value would look like { label: "Sealed Product", color: "#34d399", pct: 60 }
 })
   return (
     <>
