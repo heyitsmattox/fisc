@@ -1,4 +1,4 @@
-import type { SealedPokemonProduct } from "../../hooks/pokemon/useSealedPokemonProducts";
+import type { SealedPokemonProduct } from "../../types/pokemonTypes";
 
 interface ProductCardProps  {
   product: SealedPokemonProduct;

@@ -1,14 +1,14 @@
 import { useState } from "react";
-import useSealedPokemonProducts from "../../hooks/pokemon/useSealedPokemonProducts";
 import ProductCard from "./ProductCard";
 import Navbar from "../layout/Navbar";
 import usePortfolio from "../../hooks/portfolio/usePortfolio";
+import usePokemonSearch from "../../hooks/pokemon/usePokemonSearch";
 
 const AddToPortfolio = () => {
   const [draftSearchTerm, setDraftSearchTerm] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { sealedProducts, isLoading, error } =
-    useSealedPokemonProducts(searchTerm);
+    usePokemonSearch(searchTerm);
   const { qty, handleAdd, handleRemove } = usePortfolio();
 
   const handleSubmit = (e: React.FormEvent) => {
