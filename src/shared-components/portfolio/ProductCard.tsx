@@ -1,4 +1,4 @@
-import type { SealedPokemonProduct } from "../../types/pokemonTypes";
+import type { SealedPokemonProduct, PokemonCard } from "../../types/pokemonTypes";
 
 interface ProductCardProps  {
   product: SealedPokemonProduct;
