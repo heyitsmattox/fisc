@@ -1,7 +1,7 @@
 import type { SealedPokemonProduct, PokemonCard } from "../../types/pokemonTypes";
 
 interface ProductCardProps  {
-  product: SealedPokemonProduct;
+  product: SealedPokemonProduct | PokemonCard;
   qty: number | undefined;
   onAdd: (productId: number) => void;
   onRemove: (productId: number ) => void;

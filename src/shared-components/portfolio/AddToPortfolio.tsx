@@ -7,7 +7,7 @@ import usePokemonSearch from "../../hooks/pokemon/usePokemonSearch";
 const AddToPortfolio = () => {
   const [draftSearchTerm, setDraftSearchTerm] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { sealedProducts, isLoading, error } =
+  const { sealedProducts, singleCards, isLoading, error } =
     usePokemonSearch(searchTerm);
   const { qty, handleAdd, handleRemove } = usePortfolio();
 
@@ -28,7 +28,7 @@ const AddToPortfolio = () => {
       <div className="w-full max-w-screen-xl mx-auto px-4">
         <div className="py-10 flex flex-col items-center gap-4">
           <h1 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
-            Search Sealed Products
+            Search Products
           </h1>
           <form
             onSubmit={handleSubmit}
@@ -68,6 +68,29 @@ const AddToPortfolio = () => {
                   product.prices.cardmarket["7d_average"],
                   product.image,
                   "sealed",
+
+                )
+              }
+              onRemove={handleRemove}
+            />
+          ))}
+           {singleCards.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              qty={qty[product.id] ?? 0}
+              // we are building each product by clicking onAdd which has acccess
+              //to product.name, product.image and etc
+              // user clicks on the add button on ProductCard --> it calls onAdd while passing
+              //the product.id which also calls the function handleAdd which contains all the values
+
+              onAdd={(productId) =>
+                handleAdd(
+                  productId,
+                  product.name,
+                  product.prices.cardmarket["7d_average"],
+                  product.image,
+                  "single",
 
                 )
               }

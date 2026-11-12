@@ -26,5 +26,6 @@ export interface PokemonCard {
   episode: {
     name: string;
     cards_printed_total: number;
+    code: string;
   };
 }
