@@ -52,7 +52,7 @@ const displayInfo = {
 };
 
 const formatAllocationArray = Object.entries(allocationSidebar).map(([type, qty]) => {
-let pct = (qty / totalItems) * 100;
+let pct = Math.trunc((qty / totalItems) * 100);
 
 return {
   label: displayInfo[type as keyof typeof displayInfo].label,
