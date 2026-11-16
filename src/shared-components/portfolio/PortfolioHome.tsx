@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../layout/Navbar";
 import usePortfolio from "../../hooks/portfolio/usePortfolio";
@@ -6,18 +7,32 @@ import PortfolioStatCard from "./PortfolioStatCard";
 import AllocationSidebar from "./portfolio sidebar/AllocationSidebar";
 import RecentlyAddedSidebar from "./portfolio sidebar/RecentlyAddedSidebar";
 
+// ---- Types & constants (don't depend on props/state, so they live outside the component) ----
+type ProductFilter = "all" | "single" | "sealed";
+
+//lookup table
+const displayInfo = {
+  sealed: { label: "Sealed Product", color: "#34d399" },
+  single: { label: "Singles", color: "#38bdf8" },
+};
 
 const PortfolioHome = () => {
+  // ---- Hooks ----
   const navigate = useNavigate();
   const { portfolioData, isLoading, error } = usePortfolio();
+  const [ productFilter, setProductFilter ] = useState<ProductFilter>("all")
 
+  // ---- Base data ----
   const items = portfolioData ?? [];
   const isEmpty = items.length === 0;
 
-//items are sorted newest-first by our query in usePortfolio
-  const recentItems = items.slice(0,3);
+  // ---- Item grid: filtered view ----
+  const filteredItems =
+    productFilter === "all"
+      ? items
+      : items.filter((filterItem) => filterItem.product_type === productFilter);
 
-
+  // ---- Stat cards ----
   const totalPortfolioValue = items.reduce(
     (sum, item) => sum + (item.price ?? 0) * (item.quantity ?? 0),
     0
@@ -26,41 +41,43 @@ const PortfolioHome = () => {
      (sum, item) => sum +  (item.quantity ?? 0),
     0
   );
-const startingAllocation = { sealed: 0, single: 0 };
-// need to add the logic to convert the number in sealed and single as a percentage. e.g if we
-//have 10 total items and 5 are sealed and 5 are single. The sealed number should be 50% and singles
-//should also be 50%
-const allocationSidebar = items.reduce(
-  //acc, item is the current row being processed
-  (totals, item) => {
-    //totals starts at { sealed: 0, single: 0 }
-    // item starts at our first row in portfolioData containing product_type, quantity, etc. e.g { product_type: "sealed", quantity: 3 },
 
-    if(item.product_type === "sealed") {
-      totals.sealed = totals.sealed + (item.quantity ?? 0)
-    } else if(item.product_type === "single") {
-      totals.single = totals.single + (item.quantity ?? 0)
-    }
-    //add the conditional for when graded slabs are implemented.
-    return totals //whole object
-  }, startingAllocation //starting value for accumulator
-)
-//lookup table 
-const displayInfo = {
-  sealed: { label: "Sealed Product", color: "#34d399" },
-  single: { label: "Singles", color: "#38bdf8" },
-};
+  // ---- Sidebar: Recently Added ----
+  //items are sorted newest-first by our query in usePortfolio
+  const recentItems = items.slice(0,3);
 
-const formatAllocationArray = Object.entries(allocationSidebar).map(([type, qty]) => {
-let pct = Math.trunc((qty / totalItems) * 100);
+  // ---- Sidebar: Allocation ----
+  const startingAllocation = { sealed: 0, single: 0 };
+  // need to add the logic to convert the number in sealed and single as a percentage. e.g if we
+  //have 10 total items and 5 are sealed and 5 are single. The sealed number should be 50% and singles
+  //should also be 50%
+  const allocationSidebar = items.reduce(
+    //acc, item is the current row being processed
+    (totals, item) => {
+      //totals starts at { sealed: 0, single: 0 }
+      // item starts at our first row in portfolioData containing product_type, quantity, etc. e.g { product_type: "sealed", quantity: 3 },
 
-return {
-  label: displayInfo[type as keyof typeof displayInfo].label,
-  color: displayInfo[type as keyof typeof displayInfo].color,
-  pct,
-};
-//return value would look like { label: "Sealed Product", color: "#34d399", pct: 60 }
-})
+      if(item.product_type === "sealed") {
+        totals.sealed = totals.sealed + (item.quantity ?? 0)
+      } else if(item.product_type === "single") {
+        totals.single = totals.single + (item.quantity ?? 0)
+      }
+      //add the conditional for when graded slabs are implemented.
+      return totals //whole object
+    }, startingAllocation //starting value for accumulator
+  )
+
+  const formatAllocationArray = Object.entries(allocationSidebar).map(([type, qty]) => {
+    let pct = Math.trunc((qty / totalItems) * 100);
+
+    return {
+      label: displayInfo[type as keyof typeof displayInfo].label,
+      color: displayInfo[type as keyof typeof displayInfo].color,
+      pct,
+    };
+    //return value would look like { label: "Sealed Product", color: "#34d399", pct: 60 }
+  })
+
   return (
     <>
       <Navbar showFiscImageLogo={true} showNavbarMenuIcon={true} />
@@ -130,7 +147,7 @@ return {
               </div>
             ) : (
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 pb-12">
-                {items.map((item) => (
+                {filteredItems.map((item) => (
                   <PortfolioItemCard key={item.id} item={item} />
                 ))}
               </div>
