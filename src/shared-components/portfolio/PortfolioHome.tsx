@@ -6,10 +6,10 @@ import PortfolioItemCard from "./PortfolioItemCard";
 import PortfolioStatCard from "./PortfolioStatCard";
 import AllocationSidebar from "./portfolio sidebar/AllocationSidebar";
 import RecentlyAddedSidebar from "./portfolio sidebar/RecentlyAddedSidebar";
+import FilterChips from "./FilterChips";
+import type { ProductFilter } from "../../types/portfolioTypes";
 
-// ---- Types & constants (don't depend on props/state, so they live outside the component) ----
-type ProductFilter = "all" | "single" | "sealed";
-
+// ---- Constants (don't depend on props/state, so they live outside the component) ----
 //lookup table
 const displayInfo = {
   sealed: { label: "Sealed Product", color: "#34d399" },
@@ -133,6 +133,7 @@ const PortfolioHome = () => {
          
 
           <div className="flex-1 min-w-0 w-full">
+            <FilterChips productFilter={productFilter} setProductFilter={setProductFilter}  />
             {isEmpty ? (
               <div className="flex flex-col items-center justify-center gap-4 py-24 border border-dashed border-slate-700/50 rounded-xl">
                 <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">
